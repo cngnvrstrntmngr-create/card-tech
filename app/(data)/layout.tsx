@@ -11,13 +11,13 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="flex flex-col w-full items-center">
       <NavMenuHeader
         navItems={navItems}
         defaultPatch="products"
         resetButton={true}
       />
       {children}
-    </>
+    </div>
   );
 }

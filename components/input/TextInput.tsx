@@ -17,6 +17,7 @@ export default function TextInput({
   disabled = false,
   description,
   clasNameInput,
+  type = "text",
 }: {
   fieldName: string;
   fieldLabel?: string;
@@ -24,6 +25,7 @@ export default function TextInput({
   disabled?: boolean;
   description?: string;
   clasNameInput?: string;
+  type?: string;
 }) {
   const { control } = useFormContext();
 
@@ -40,6 +42,7 @@ export default function TextInput({
               {...field}
               value={field.value ?? ""}
               disabled={disabled}
+              type={type}
             />
           </FormControl>
           <FormDescription>{description}</FormDescription>

@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { updateTag } from "next/cache";
 
 export async function createProduct(data: {
   name: string;
@@ -7,7 +8,9 @@ export async function createProduct(data: {
   unit: string;
   productId?: number;
 }) {
-  return await prisma.product.create({ data });
+  const dat = await prisma.product.create({ data });
+  updateTag("products");
+  return dat.id;
 }
 
 export async function updateProduct(

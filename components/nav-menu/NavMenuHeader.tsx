@@ -82,12 +82,12 @@ export default function NavMenuHeader({
           isLoading={isPending}
         />
       )}
-      <button onClick={addNew} className="cursor-pointer w-24  px-2">
+      <button onClick={addNew} className="cursor-pointer w-12  px-2">
         <Plus className="w-4 h-4" />
       </button>
 
       {resetButton && (
-        <button onClick={resetParams} className="cursor-pointer w-24  px-2">
+        <button onClick={resetParams} className="cursor-pointer w-12  px-2">
           <RefreshCcw className="w-4 h-4" />
         </button>
       )}
