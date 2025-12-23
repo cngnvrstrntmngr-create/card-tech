@@ -1,0 +1,16 @@
+{
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "cSpell.words": [
+    "cmdk",
+    "Cucina",
+    "mngr",
+    "papaparse",
+    "supabase",
+    "swipeable",
+    "turbopack"
+  ],
+  "cSpell.language": "en,ru,ro",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
