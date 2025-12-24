@@ -4,8 +4,8 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, RefreshCcw } from "lucide-react";
 import SelectTabsByPatch from "./SelectTabsByPatch";
-import SelectByCategory from "./SelectByCategory";
-import { Button } from "../ui/button";
+import SelectByCategory, { CATEGORY } from "./SelectByCategory";
+import { CATEGORY_PRODUCT } from "@/features/product/constants";
 
 export type PageNavType = {
   title: string;
@@ -28,7 +28,8 @@ export default function NavMenuHeader({
   const key = `patch-card`;
   const router = useRouter();
 
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("all");
+  const [categoryProduct, setCategoryProduct] = useState("all");
 
   const [patch, setPatch] = useState(defaultPatch);
 
@@ -48,12 +49,14 @@ export default function NavMenuHeader({
     localStorage.setItem(key, patch);
 
     const url =
-      patch === "cards" ? `/${patch}?category=${category}` : `/${patch}`;
+      patch === "cards"
+        ? `/${patch}?category=${category}`
+        : `/${patch}?categoryProduct=${categoryProduct}`;
 
     startTransition(() => {
       router.push(url);
     });
-  }, [patch, category, hydrated]);
+  }, [patch, category, categoryProduct, hydrated]);
 
   const resetParams = () => {
     setPatch("");
@@ -77,8 +80,17 @@ export default function NavMenuHeader({
 
       {patch === "cards" && (
         <SelectByCategory
+          options={[{ value: "all", label: "все" }, ...CATEGORY]}
           category={category}
           setCategory={setCategory}
+          isLoading={isPending}
+        />
+      )}
+      {patch === "products" && (
+        <SelectByCategory
+          options={[{ value: "all", label: "все" }, ...CATEGORY_PRODUCT]}
+          category={categoryProduct}
+          setCategory={setCategoryProduct}
           isLoading={isPending}
         />
       )}

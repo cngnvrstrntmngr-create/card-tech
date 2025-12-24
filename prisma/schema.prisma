@@ -14,40 +14,41 @@ datasource db {
 }
 
 model Product {
-  id          Int          @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
-  coefficient String       
+  coefficient String
   unit        String
-  productId   Int?        
+  category    String
+  key         String? @unique
 
   recipeItems RecipeItem[]
 }
 
 model CalculationCard {
-  id               Int           @id @default(autoincrement())
-  cardId           String        @unique
+  id               Int      @id @default(autoincrement())
+  cardId           String   @unique
   name             String
   unit             String
   category         String
   weight           String
   expirationPeriod String
   description      String
-  createdAt        DateTime      @default(now())
+  createdAt        DateTime @default(now())
 
-  recipe           RecipeItem[]
+  recipe RecipeItem[]
 }
 
 model RecipeItem {
-  id          Int     @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   name        String
   quantity    String
-  coefficient String  
+  coefficient String
   unit        String
 
-  cardId      Int
-  productId   Int?
+  cardId    Int
+  productId Int?
 
-  card        CalculationCard @relation(fields: [cardId],references: [id],onUpdate: Cascade,onDelete: Restrict)
+  card CalculationCard @relation(fields: [cardId], references: [id], onUpdate: Cascade, onDelete: Restrict)
 
-  product     Product? @relation(fields: [productId],references: [id],onUpdate: Cascade,onDelete: SetNull)
+  product Product? @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: SetNull)
 }

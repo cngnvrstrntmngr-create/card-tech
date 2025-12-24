@@ -5,58 +5,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
-const CATEGORY = [
+export const CATEGORY = [
   {
-    name: "первое",
+    label: "первое",
     value: "first",
   },
   {
-    name: "второе",
+    label: "второе",
     value: "second",
   },
   {
-    name: "салат",
+    label: "салат",
     value: "salad",
   },
   {
-    name: "десерт",
+    label: "десерт",
     value: "dessert",
   },
   {
-    name: "суп",
+    label: "суп",
     value: "soup",
   },
   {
-    name: "П/Ф",
+    label: "П/Ф",
     value: "pf",
   },
   {
-    name: "персонал",
+    label: "персонал",
     value: "staff",
   },
   {
-    name: "завтрак",
+    label: "завтрак",
     value: "breakfast",
   },
   {
-    name: "гарнир",
+    label: "гарнир",
     value: "side",
   },
 ];
 
 export default function SelectByMonthYear({
+  options,
   category,
   setCategory,
 
   isLoading,
 }: {
+  options: { value: string; label: string }[];
   category: string;
   setCategory: (value: string) => void;
 
   isLoading?: boolean;
 }) {
-  const classNameSelect = "w-28 h-8! rounded-md  [&>svg]:hidden justify-center";
+  const classNameSelect = "w-32 h-8! rounded-md  [&>svg]:hidden justify-center";
   return (
     <div className="flex items-center ">
       <Select
@@ -64,13 +67,13 @@ export default function SelectByMonthYear({
         onValueChange={(value) => setCategory(value)}
         disabled={isLoading}
       >
-        <SelectTrigger className={classNameSelect}>
+        <SelectTrigger className={cn(classNameSelect)}>
           <SelectValue placeholder="category" />
         </SelectTrigger>
         <SelectContent>
-          {CATEGORY.map((category) => (
+          {options.map((category) => (
             <SelectItem key={category.value} value={category.value}>
-              {category.name}
+              <span className="truncate block w-full">{category.label}</span>
             </SelectItem>
           ))}
         </SelectContent>

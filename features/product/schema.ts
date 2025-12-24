@@ -5,7 +5,8 @@ export const productSchema = z.object({
   name: z.string().default(""),
   coefficient: z.string().default(""),
   unit: z.string().default(""),
-  productId: z.number().nullable().optional(),
+  category: z.string().default(""),
+  key: z.string().default(""),
 });
 
 export type ProductType = z.infer<typeof productSchema>;
@@ -13,5 +14,6 @@ export const productDefaultValues = productSchema.default({
   name: "",
   coefficient: "",
   unit: "",
-  productId: null,
+  category: "",
+  key: "",
 });
