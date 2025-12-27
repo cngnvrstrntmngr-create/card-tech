@@ -1,7 +1,13 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import {
   Popover,
@@ -13,6 +19,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 type NumericInputProps = {
+  fieldLabel?: string;
   fieldName: string;
   id?: string;
   disabled?: boolean;
@@ -22,6 +29,7 @@ type NumericInputProps = {
 };
 
 function NumericInput({
+  fieldLabel,
   fieldName,
   id,
   placeholder,
@@ -52,7 +60,10 @@ function NumericInput({
         };
 
         return (
-          <FormItem>
+          <FormItem
+            className={cn(fieldLabel ? "grid-cols-2" : "grid-cols-1 gap-4")}
+          >
+            {fieldLabel && <FormLabel>{fieldLabel}</FormLabel>}
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <FormControl>
@@ -62,7 +73,11 @@ function NumericInput({
                     placeholder={placeholder}
                     disabled={disabled}
                     onClick={() => setOpen(true)}
-                    className={cn("cursor-pointer text-center h-6", className)}
+                    className={cn(
+                      "cursor-pointer text-center h-6",
+                      fieldLabel && "w-12 h-full",
+                      className
+                    )}
                     onChange={(e) => updateValue(e.target.value)}
                   />
                 </FormControl>
