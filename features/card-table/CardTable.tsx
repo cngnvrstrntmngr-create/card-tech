@@ -20,7 +20,7 @@ export default function ProductsTable({
   return (
     <ViewTransition>
       <Table>
-        <TableHeader>
+        <TableHeader className="hidden ma:table-header-group">
           <TableRow>
             <TableHead />
             <TableHead>карты</TableHead>
@@ -37,10 +37,16 @@ export default function ProductsTable({
             <TableRow key={item.id}>
               <TableCell>{index + 1}</TableCell>
               <TableCell className="font-medium">{item.name}</TableCell>
-              <TableCell>{item.category}</TableCell>
-              <TableCell>{item.weight}</TableCell>
-              <TableCell>{item.cardId}</TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
+                {item.category}
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
+                {item.weight}
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
+                {item.cardId}
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
                 {format(new Date(item.createdAt), "dd.MM.yyyy")}
               </TableCell>
               <TableCell>

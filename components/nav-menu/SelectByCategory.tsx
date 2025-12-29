@@ -61,7 +61,7 @@ export default function SelectByMonthYear({
   isLoading?: boolean;
 }) {
   const classNameSelect =
-    "w-36 h-8! rounded-md  [&>svg]:hidden justify-center bg-border";
+    "md:w-36 w-22 h-8! rounded-md  [&>svg]:hidden justify-center bg-border/30 border-0 items-center";
 
   const resetParams = () => {
     setCategory("");
@@ -79,14 +79,16 @@ export default function SelectByMonthYear({
         <SelectContent>
           {options.map((category) => (
             <SelectItem key={category.value} value={category.value}>
-              <span className="truncate block w-full">{category.label}</span>
+              <span className="truncate block w-full font-bold">
+                {category.label}
+              </span>
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
       <button
         onClick={resetParams}
-        className="cursor-pointer w-12  px-2 bg-border rounded-md h-8 flex items-center justify-center"
+        className="cursor-pointer md:w-12 w-8  px-2 bg-border/30 border-0 rounded-md h-8 flex items-center justify-center"
       >
         <RefreshCcw className="w-4 h-4" />
       </button>

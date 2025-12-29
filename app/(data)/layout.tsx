@@ -21,7 +21,7 @@ export default async function HomeLayout({
     return <NotPermission />;
   }
   return (
-    <div className="flex flex-col w-full items-center pt-2">
+    <div className="flex items-center flex-col h-full">
       <NavMenuHeader navItems={navItems} defaultPatch="cards" />
       {children}
     </div>

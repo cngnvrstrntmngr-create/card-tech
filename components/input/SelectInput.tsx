@@ -48,7 +48,13 @@ export default function SelectInput({
               : "grid-cols-1 gap-4"
           )}
         >
-          {fieldLabel && <FormLabel>{fieldLabel}</FormLabel>}
+          {fieldLabel && (
+            <FormLabel
+              className={cn(orientation === "horizontal" && "border-b")}
+            >
+              {fieldLabel}
+            </FormLabel>
+          )}
           <Select
             key={field.value ?? "empty"}
             onValueChange={(value) => {

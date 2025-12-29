@@ -65,7 +65,9 @@ function NumericInput({
               fieldLabel ? "grid-cols-2 gap-2" : "grid-cols-1 gap-4"
             )}
           >
-            {fieldLabel && <FormLabel>{fieldLabel}</FormLabel>}
+            {fieldLabel && (
+              <FormLabel className="border-b">{fieldLabel}</FormLabel>
+            )}
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <FormControl>

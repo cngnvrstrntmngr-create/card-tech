@@ -23,7 +23,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -43,9 +42,7 @@ function SelectFieldWithSearch({
   className,
   onValueChange,
 }: Props) {
-  const { theme } = useTheme();
   const { control } = useFormContext();
-  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
   const filteredOptions = useMemo(() => {
@@ -95,7 +92,7 @@ function SelectFieldWithSearch({
                             key={item.value}
                             value={item.label}
                             onSelect={() => {
-                              field.onChange(item.value); // сохраняем value (id)
+                              field.onChange(item.value);
                               onValueChange?.(item.value);
                               setSearch("");
                             }}

@@ -188,7 +188,7 @@ export default function CardForm({
           <NumericInput
             fieldLabel="Технологическая карта:"
             fieldName="cardId"
-            className="border-0 border-b  font-bold  rounded-none shadow-none h-9"
+            className="border-0 border-b  font-bold  rounded-none shadow-none h-9 w-full"
             disabled={disabled}
           />
         </div>
@@ -205,7 +205,7 @@ export default function CardForm({
         <TextInput
           fieldLabel="Наименование продукта:"
           fieldName="name"
-          orientation="vertical"
+          orientation="horizontal"
           classNameInput="h-9! border-0 shadow-none border-b rounded-none"
           disabled={disabled}
         />
@@ -213,7 +213,7 @@ export default function CardForm({
         <TextInput
           fieldLabel="Срок хранения:"
           fieldName="expirationPeriod"
-          orientation="vertical"
+          orientation="horizontal"
           classNameInput="h-9! border-0 shadow-none border-b rounded-none"
           disabled={disabled}
         />
@@ -221,7 +221,7 @@ export default function CardForm({
         <TextInput
           fieldLabel="Вес:"
           fieldName="weight"
-          orientation="vertical"
+          orientation="horizontal"
           classNameInput="h-9! border-0 shadow-none border-b rounded-none"
           disabled={disabled}
         />

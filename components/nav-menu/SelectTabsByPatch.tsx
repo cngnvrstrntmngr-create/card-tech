@@ -24,7 +24,7 @@ export default function SelectTabsByPatch({
             value={page.href}
             disabled={isPending}
             className={cn(
-              "w-26 cursor-pointer",
+              "md:w-26 w-18 cursor-pointer",
               isPending && "opacity-50",
               classNamePatch
             )}

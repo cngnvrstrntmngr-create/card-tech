@@ -22,7 +22,7 @@ export default function ProductsTable({ data }: ProductsTableProps) {
   return (
     <ViewTransition>
       <Table>
-        <TableHeader>
+        <TableHeader className="hidden md:table-header-group">
           <TableRow>
             <TableHead />
             <TableHead>продукт</TableHead>
@@ -42,13 +42,15 @@ export default function ProductsTable({ data }: ProductsTableProps) {
                 {CATEGORY_UNIT.find((u) => u.value === product.unit)?.label}
               </TableCell>
               <TableCell>{product.coefficient}</TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 {
                   CATEGORY_PRODUCT.find((c) => c.value === product.category)
                     ?.label
                 }
               </TableCell>
-              <TableCell>{product.key || "-"}</TableCell>
+              <TableCell className="hidden md:table-cell">
+                {product.key || "-"}
+              </TableCell>
               <TableCell>
                 <ActionButton
                   id={+product?.id!}
