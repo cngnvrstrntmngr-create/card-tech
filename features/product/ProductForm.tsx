@@ -14,7 +14,13 @@ import { productDefaultValues, productSchema, ProductType } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 
-export default function ProductForm({ data }: { data?: ProductType }) {
+export default function ProductForm({
+  data,
+  disabled = false,
+}: {
+  data?: ProductType;
+  disabled?: boolean;
+}) {
   const id = data?.id;
   const form = useForm<ProductType>({
     resolver: zodResolver(productSchema),
@@ -54,20 +60,31 @@ export default function ProductForm({ data }: { data?: ProductType }) {
     form.reset(data);
   }, [data]);
   return (
-    <FormWrapper form={form} onSubmit={onSubmit} className="gap-8">
-      <TextInput fieldLabel="продукт" fieldName="name" />
-      <TextInput fieldLabel="коэффициент" fieldName="coefficient" />
+    <FormWrapper
+      form={form}
+      onSubmit={onSubmit}
+      className="gap-8"
+      disabled={disabled}
+    >
+      <TextInput fieldLabel="продукт" fieldName="name" disabled={disabled} />
+      <TextInput
+        fieldLabel="коэффициент"
+        fieldName="coefficient"
+        disabled={disabled}
+      />
       <SelectInput
         fieldLabel="единица"
         fieldName="unit"
         options={CATEGORY_UNIT}
+        disabled={disabled}
       />
       <SelectInput
         fieldLabel="категория"
         fieldName="category"
         options={CATEGORY_PRODUCT}
+        disabled={disabled}
       />
-      <TextInput fieldLabel="номер id" fieldName="key" />
+      <TextInput fieldLabel="номер id" fieldName="key" disabled={disabled} />
     </FormWrapper>
   );
 }
