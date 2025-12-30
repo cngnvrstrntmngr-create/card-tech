@@ -188,7 +188,7 @@ export default function CardForm({
           <NumericInput
             fieldLabel="Технологическая карта:"
             fieldName="cardId"
-            className="border-0 border-b  font-bold  rounded-none shadow-none h-9 w-full"
+            className="border-0 border-b text-start  font-bold  rounded-none shadow-none h-9 w-full"
             disabled={disabled}
           />
         </div>
@@ -237,7 +237,7 @@ export default function CardForm({
                 <div className="flex justify-center items-center gap-3">
                   <NumericInput
                     fieldName="portion"
-                    className="w-full h-full border-0 shadow-none border-b rounded-none"
+                    className="w-full h-full  border-0 shadow-none border-b rounded-none"
                     disabled={disabled}
                   />
                   порции
@@ -308,8 +308,9 @@ export default function CardForm({
                   <TableCell className="border-x p-0">
                     <NumericInput
                       fieldName={`recipe.${idx}.quantity`}
-                      className="border-0 shadow-none rounded-none w-full h-8"
+                      className="border-0 shadow-none rounded-none w-full h-8 text-start text-md"
                       disabled={disabled}
+                      floating={true}
                     />
                   </TableCell>
 

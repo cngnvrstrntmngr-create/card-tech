@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+
 import {
   FormControl,
   FormField,
@@ -15,7 +17,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 type NumericInputProps = {
@@ -26,6 +27,7 @@ type NumericInputProps = {
   placeholder?: string;
   className?: string;
   onValueChange?: (value: string) => void;
+  floating?: boolean;
 };
 
 function NumericInput({
@@ -36,6 +38,7 @@ function NumericInput({
   disabled,
   className,
   onValueChange,
+  floating = false,
 }: NumericInputProps) {
   const { control } = useFormContext();
   const [open, setOpen] = useState(false);
@@ -46,6 +49,15 @@ function NumericInput({
   }, []);
 
   if (!mounted) return null;
+
+  const formatFloating = (val: string) => {
+    if (val === "" || val === "-" || val === ".") return val;
+
+    const num = Number(val);
+    if (Number.isNaN(num)) return val;
+
+    return num.toFixed(4);
+  };
 
   return (
     <FormField
@@ -62,12 +74,14 @@ function NumericInput({
         return (
           <FormItem
             className={cn(
+              "grid items-center",
               fieldLabel ? "grid-cols-2 gap-2" : "grid-cols-1 gap-4"
             )}
           >
             {fieldLabel && (
               <FormLabel className="border-b">{fieldLabel}</FormLabel>
             )}
+
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <FormControl>
@@ -76,13 +90,18 @@ function NumericInput({
                     value={value}
                     placeholder={placeholder}
                     disabled={disabled}
-                    onClick={() => setOpen(true)}
                     className={cn(
                       "cursor-pointer text-center",
                       fieldLabel && "w-12 h-full",
                       className
                     )}
+                    onClick={() => setOpen(true)}
                     onChange={(e) => updateValue(e.target.value)}
+                    onBlur={() => {
+                      if (floating) {
+                        updateValue(formatFloating(value));
+                      }
+                    }}
                   />
                 </FormControl>
               </PopoverTrigger>
@@ -103,7 +122,7 @@ function NumericInput({
                   variant="outline"
                   className="h-10 text-xl bg-background"
                   onClick={() => {
-                    if (!value.includes("-")) {
+                    if (!value.startsWith("-")) {
                       updateValue("-" + value);
                     }
                   }}
@@ -142,7 +161,12 @@ function NumericInput({
                 <Button
                   variant="outline"
                   className="h-10 text-xl col-span-2 bg-background"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    if (floating) {
+                      updateValue(formatFloating(value));
+                    }
+                    setOpen(false);
+                  }}
                 >
                   ok
                 </Button>
