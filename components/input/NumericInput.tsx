@@ -74,7 +74,6 @@ function NumericInput({
         return (
           <FormItem
             className={cn(
-              "grid items-center",
               fieldLabel ? "grid-cols-2 gap-2" : "grid-cols-1 gap-4"
             )}
           >
