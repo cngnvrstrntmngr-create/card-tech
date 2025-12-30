@@ -70,6 +70,12 @@ export default function CardForm({
 
   const { isLoaded, resetForm } = useLocalStorageForm(form, STORAGE_KEY);
 
+  const category =
+    useWatch({
+      control: form.control,
+      name: "category",
+    }) || "";
+
   const portion =
     useWatch({
       control: form.control,
@@ -231,7 +237,7 @@ export default function CardForm({
             <TableRow>
               <TableHead colSpan={3}></TableHead>
               <TableHead colSpan={2} className="text-center">
-                1 порция
+                1 {category === "pf" ? "кг" : "порция"}
               </TableHead>
               <TableHead colSpan={2} className="text-center">
                 <div className="flex justify-center items-center gap-3">
@@ -240,7 +246,7 @@ export default function CardForm({
                     className="w-full h-full  border-0 shadow-none border-b rounded-none"
                     disabled={disabled}
                   />
-                  порции
+                  {category === "pf" ? "кг" : "порция"}
                 </div>
               </TableHead>
               <TableHead></TableHead>
