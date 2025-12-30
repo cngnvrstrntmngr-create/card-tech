@@ -8,7 +8,7 @@ const navItems = [
   { title: "тех-карты", href: "cards" },
 ];
 
-const ACCESS_ROLE = ["ADMIN", "CUCINA", "MNGR"];
+const ACCESS_ROLE = ["ADMIN", "CUCINA", "MNGR", "BAR"];
 
 export default async function HomeLayout({
   children,
