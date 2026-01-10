@@ -17,8 +17,17 @@ export default async function HomeLayout({
 }) {
   const session = await getServerSession(authOptions);
 
-  if (!session || !ACCESS_ROLE.includes(session.user.role || "")) {
-    return <NotPermission />;
+  if (!session) {
+    return <NotPermission email="" role="" />;
+  }
+
+  if (session.user && !ACCESS_ROLE.includes(session.user.role || "")) {
+    return (
+      <NotPermission
+        email={session?.user.email || ""}
+        role={session?.user.role || ""}
+      />
+    );
   }
   return (
     <div className="flex items-center flex-col h-full">

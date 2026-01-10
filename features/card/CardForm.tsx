@@ -194,7 +194,7 @@ export default function CardForm({
           <NumericInput
             fieldLabel="Технологическая карта:"
             fieldName="cardId"
-            className="border-0 border-b text-start  font-bold  rounded-none shadow-none h-9 w-full"
+            className="border-0 border-b text-start  font-bold  rounded-none shadow-none h-8 w-full"
             disabled={disabled}
           />
         </div>
@@ -204,7 +204,7 @@ export default function CardForm({
           fieldName="category"
           orientation="horizontal"
           options={CATEGORY}
-          classNameSelect="border-0 shadow-none border-b rounded-none text-black! h-9!"
+          classNameSelect="border-0 shadow-none border-b rounded-none text-black! h-8!"
           disabled={disabled}
         />
 
@@ -212,7 +212,7 @@ export default function CardForm({
           fieldLabel="Наименование продукта:"
           fieldName="name"
           orientation="horizontal"
-          classNameInput="h-9! border-0 shadow-none border-b rounded-none"
+          classNameInput="h-8! border-0 shadow-none border-b rounded-none"
           disabled={disabled}
         />
 
@@ -220,7 +220,7 @@ export default function CardForm({
           fieldLabel="Срок хранения:"
           fieldName="expirationPeriod"
           orientation="horizontal"
-          classNameInput="h-9! border-0 shadow-none border-b rounded-none"
+          classNameInput="h-8! border-0 shadow-none border-b rounded-none"
           disabled={disabled}
         />
 
@@ -228,11 +228,11 @@ export default function CardForm({
           fieldLabel="Вес:"
           fieldName="weight"
           orientation="horizontal"
-          classNameInput="h-9! border-0 shadow-none border-b rounded-none"
+          classNameInput="h-8! border-0 shadow-none border-b rounded-none"
           disabled={disabled}
         />
 
-        <Table className="my-4">
+        <Table className="my-2">
           <TableHeader>
             <TableRow>
               <TableHead colSpan={3}></TableHead>
@@ -253,9 +253,9 @@ export default function CardForm({
             </TableRow>
 
             <TableRow>
-              <TableHead className="w-10 border-r"></TableHead>
-              <TableHead>продукт</TableHead>
-              <TableHead className="border-x w-16">ед</TableHead>
+              <TableHead className="w-8 border-r"></TableHead>
+              <TableHead className="text-center">продукт</TableHead>
+              <TableHead className="border-x w-16 text-center">ед</TableHead>
               <TableHead className="border-x w-30 text-center">
                 брутто
               </TableHead>
@@ -311,12 +311,19 @@ export default function CardForm({
                     />
                   </TableCell>
 
-                  <TableCell className="border-x p-0">
+                  <TableCell className="border-x p-0 md:hidden">
                     <NumericInput
                       fieldName={`recipe.${idx}.quantity`}
-                      className="border-0 shadow-none rounded-none w-full h-8 text-start text-md"
+                      className="border-0 shadow-none rounded-none w-full h-8 text-center text-md"
                       disabled={disabled}
                       floating={true}
+                    />
+                  </TableCell>
+                  <TableCell className="border-x p-0 hidden md:table-cell">
+                    <input
+                      {...form.register(`recipe.${idx}.quantity`)}
+                      className="border-0 shadow-none rounded-none w-full h-8 text-center text-md"
+                      disabled={disabled}
                     />
                   </TableCell>
 
@@ -375,7 +382,9 @@ export default function CardForm({
             })}
 
             <TableRow className="font-semibold">
-              <TableCell colSpan={3}>Итого, кг</TableCell>
+              <TableCell colSpan={3} className="text-end">
+                Итого, кг
+              </TableCell>
               <TableCell className="text-center">
                 {computedValues.totals.totalBruto.toFixed(2)}
               </TableCell>

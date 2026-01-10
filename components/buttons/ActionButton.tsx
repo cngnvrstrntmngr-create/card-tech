@@ -1,7 +1,7 @@
 "use client";
 
 import ModalConfirm from "@/components/modal/ModalConfirm";
-import { Eye, PenBoxIcon, Trash2Icon, TrashIcon } from "lucide-react";
+import { PenBoxIcon, TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,17 +17,14 @@ export default function ActionButton({
 }) {
   const router = useRouter();
   const { data: session } = useSession();
+  const isAdmin = session?.user?.role === "ADMIN";
 
   const [open, setOpen] = useState(false);
   const handleConfirm = () => {
     setOpen(false);
     handleDelete && handleDelete(id);
   };
-  const handleView = () => {
-    router.push(`/${mainTag}-view/${id}`);
-  };
 
-  const isDisabled = session?.user?.role !== "ADMIN";
   return (
     <>
       <ModalConfirm
@@ -37,23 +34,22 @@ export default function ActionButton({
         message="удалить"
       />
       <div className="flex justify-between gap-6 w-full">
-        <button className="cursor-pointer" onClick={() => handleView()}>
-          <Eye className="w-5 h-5 text-green-700 cursor-pointer" />
-        </button>
         <button
-          disabled={isDisabled}
+          disabled={!isAdmin}
           className="cursor-pointer"
           onClick={() => router.push(`/${mainTag}/${id}`)}
         >
           <PenBoxIcon className="h-4 w-4 text-blue-700" />
         </button>
-        <button
-          disabled={isDisabled}
-          className="cursor-pointer"
-          onClick={() => !isDisabled && setOpen(true)}
-        >
-          <TrashIcon className="h-4 w-4 text-red-700" />
-        </button>
+        {isAdmin && (
+          <button
+            disabled={!isAdmin}
+            className="cursor-pointer"
+            onClick={() => setOpen(true)}
+          >
+            <TrashIcon className="h-4 w-4 text-red-700" />
+          </button>
+        )}
       </div>
     </>
   );

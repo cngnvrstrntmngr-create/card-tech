@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProviders } from "@/providers/SessionProviders";
 import { Toaster } from "@/components/ui/sonner";
-import LogOutButton from "@/components/buttons/LogOutButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +35,6 @@ export default function RootLayout({
             <div>{children}</div>
           </SessionProviders>
         </div>
-        <LogOutButton />
       </body>
     </html>
   );

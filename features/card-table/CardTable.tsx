@@ -12,21 +12,32 @@ import ActionButton from "../../components/buttons/ActionButton";
 import { deleteCard } from "@/app/actions/cards/cards-action";
 import { useState, ViewTransition } from "react";
 import { CalculationCardType } from "../card/schema";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function ProductsTable({
   data,
 }: {
   data: CalculationCardType[];
 }) {
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === "ADMIN";
+
+  const router = useRouter();
+
   const [itemSearch, setItemSearch] = useState<string>("");
   const normalizedSearch = itemSearch.trim().toLowerCase();
+
+  const handleView = (id: string) => {
+    router.push(`/card-view/${id}`);
+  };
   return (
     <ViewTransition>
       <Table className="table-fixed">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-6" />
-            <TableHead className="md:w-70 w-60">
+            <TableHead className="w-10" />
+            <TableHead className="w-70">
               <input
                 type="text"
                 placeholder="...search"
@@ -53,7 +64,12 @@ export default function ProductsTable({
             .map((item: any, index: number) => (
               <TableRow key={item.id}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell className="truncate">{item.name}</TableCell>
+                <TableCell
+                  className="truncate cursor-pointer hover:text-red-700"
+                  onClick={() => handleView(item.id)}
+                >
+                  {item.name} <span className="pl-4">...</span>
+                </TableCell>
                 <TableCell className="hidden md:table-cell">
                   {item.category}
                 </TableCell>
@@ -67,11 +83,13 @@ export default function ProductsTable({
                   {format(new Date(item.createdAt), "dd.MM.yyyy")}
                 </TableCell>
                 <TableCell>
-                  <ActionButton
-                    id={item.id}
-                    mainTag="card"
-                    handleDelete={deleteCard}
-                  />
+                  {isAdmin && (
+                    <ActionButton
+                      id={item.id}
+                      mainTag="card"
+                      handleDelete={deleteCard}
+                    />
+                  )}
                 </TableCell>
               </TableRow>
             ))}

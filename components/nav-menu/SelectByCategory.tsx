@@ -73,8 +73,8 @@ export default function SelectByMonthYear({
         onValueChange={(value) => setCategory(value)}
         disabled={isLoading}
       >
-        <SelectTrigger className={cn(classNameSelect, "text-white!")}>
-          <SelectValue placeholder="category" />
+        <SelectTrigger className={cn(classNameSelect, "text-white! p-1")}>
+          <SelectValue placeholder="категория" />
         </SelectTrigger>
         <SelectContent>
           {options.map((category) => (
