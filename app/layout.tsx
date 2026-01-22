@@ -31,9 +31,7 @@ export default function RootLayout({
       >
         <div className="md:w-220 flex-1 w-full">
           <Toaster position="top-center" />
-          <SessionProviders>
-            <div>{children}</div>
-          </SessionProviders>
+          <SessionProviders>{children}</SessionProviders>
         </div>
       </body>
     </html>

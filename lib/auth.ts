@@ -61,6 +61,7 @@ export const authOptions: NextAuthOptions = {
        */
       if (account?.provider === "google" && profile?.email) {
         const users = await getUsers();
+        console.log("users", users);
         const dbUser = users.find((u) => u.mail === profile.email);
 
         token.role = dbUser?.role ?? "OBSERVER";
