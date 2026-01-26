@@ -1,7 +1,7 @@
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
 import { Form } from "../ui/form";
 import { cn } from "@/lib/utils";
-import SaveExitButton from "../buttons/SaveExitButton";
+import SaveExitButton from "../buttons/save-button";
 
 export function FormWrapper({
   form,

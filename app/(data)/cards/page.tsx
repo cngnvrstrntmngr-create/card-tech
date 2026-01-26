@@ -2,9 +2,9 @@ import {
   getAllCards,
   getCardsByCategory,
 } from "@/app/actions/cards/cards-action";
-import EmptyPage from "@/components/page/EmptyPage";
-import NotData from "@/components/page/NotData";
-import CardTable from "@/features/card-table/CardTable";
+import EmptyPage from "@/components/page/empty-page";
+import NotData from "@/components/page/not-data";
+import CardTable from "@/features/card-table/card-page";
 import { CalculationCardType } from "@/features/card/schema";
 
 export default async function Page({

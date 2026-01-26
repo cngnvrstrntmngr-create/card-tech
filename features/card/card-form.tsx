@@ -10,9 +10,9 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2Icon, PlusIcon } from "lucide-react";
 
-import TextInput from "@/components/input/TextInput";
-import NumericInput from "@/components/input/NumericInput";
-import SelectInput from "@/components/input/SelectInput";
+import TextInput from "@/components/input/text-input";
+import NumericInput from "@/components/input/numeric-input";
+import SelectInput from "@/components/input/select-input";
 
 import {
   Table,
@@ -25,7 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
-import { FormWrapper } from "@/components/wrapper/FormWrapper";
+import { FormWrapper } from "@/components/wrapper/form-wrapper";
 
 import {
   calculationCardDefaultValues,
@@ -35,12 +35,12 @@ import {
 } from "./schema";
 import { ProductType } from "../product/schema";
 import { useLocalStorageForm } from "@/hooks/use-local-storage";
-import { CATEGORY } from "@/components/nav-menu/SelectByCategory";
+import { CATEGORY } from "@/components/nav-menu/select-category";
 import { createCard, updateCard } from "@/app/actions/cards/cards-action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import SelectFieldWithSearch from "@/components/input/SelectWithSearch";
-import PrintButton from "@/components/buttons/PrintButton";
+import SelectFieldWithSearch from "@/components/input/select-with-search";
+import PrintButton from "@/components/buttons/print-button";
 import { cn } from "@/lib/utils";
 
 export default function CardForm({

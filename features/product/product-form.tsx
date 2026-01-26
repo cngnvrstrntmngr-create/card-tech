@@ -3,9 +3,9 @@ import {
   createProduct,
   updateProduct,
 } from "@/app/actions/products/products-actions";
-import SelectInput from "@/components/input/SelectInput";
-import TextInput from "@/components/input/TextInput";
-import { FormWrapper } from "@/components/wrapper/FormWrapper";
+import SelectInput from "@/components/input/select-input";
+import TextInput from "@/components/input/text-input";
+import { FormWrapper } from "@/components/wrapper/form-wrapper";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CATEGORY_PRODUCT, CATEGORY_UNIT } from "./constants";
 import { toast } from "sonner";

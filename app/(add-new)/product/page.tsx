@@ -1,4 +1,4 @@
-import ProductForm from "@/features/product/ProductForm";
+import ProductForm from "@/features/product/product-form";
 
 export default async function Page() {
   return <ProductForm />;

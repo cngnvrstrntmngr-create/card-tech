@@ -1,5 +1,5 @@
 import { getProductById } from "@/app/actions/products/products-actions";
-import ProductForm from "@/features/product/ProductForm";
+import ProductForm from "@/features/product/product-form";
 import { ProductType } from "@/features/product/schema";
 
 export default async function Page({

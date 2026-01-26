@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { deleteProduct } from "@/app/actions/products/products-actions";
 import { CATEGORY_PRODUCT, CATEGORY_UNIT } from "../product/constants";
-import ActionButton from "@/components/buttons/ActionButton";
+import ActionButton from "@/components/buttons/action-button";
 import { useState, ViewTransition } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -38,8 +38,8 @@ export default function ProductsTable({ data }: ProductsTableProps) {
       <Table className="table-fixed">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-8" />
-            <TableHead className="w-50">
+            <TableHead className="w-6" />
+            <TableHead className="md:w-52 w-32">
               <input
                 type="text"
                 placeholder="...search"
@@ -47,11 +47,13 @@ export default function ProductsTable({ data }: ProductsTableProps) {
                 className="p-1 outline-none focus:outline-none focus:ring-0 focus-visible:ring-0"
               ></input>
             </TableHead>
-            <TableHead className="w-10" />
-            <TableHead className="w-10" />
-            <TableHead />
-            <TableHead />
-            <TableHead />
+            <TableHead className="w-12" />
+            <TableHead className="md:w-12 w-10" />
+            <TableHead className="w-42 hidden md:table-cell" />
+            <TableHead className="w-20 hidden md:table-cell text-muted-foreground">
+              id
+            </TableHead>
+            <TableHead className="w-12" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,7 +68,7 @@ export default function ProductsTable({ data }: ProductsTableProps) {
               <TableRow key={product.id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell
-                  className="truncate"
+                  className="truncate cursor-pointer"
                   onClick={() => handleView(product.id?.toString()!)}
                 >
                   {product.name} <span className="pl-4">...</span>

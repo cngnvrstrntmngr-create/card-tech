@@ -7,8 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { format } from "date-fns";
-import ActionButton from "../../components/buttons/ActionButton";
+import ActionButton from "../../components/buttons/action-button";
 import { deleteCard } from "@/app/actions/cards/cards-action";
 import { useState, ViewTransition } from "react";
 import { CalculationCardType } from "../card/schema";
@@ -36,8 +35,8 @@ export default function ProductsTable({
       <Table className="table-fixed">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-10" />
-            <TableHead className="w-70">
+            <TableHead className="w-6" />
+            <TableHead className="md:w-52 w-30">
               <input
                 type="text"
                 placeholder="...search"
@@ -45,10 +44,10 @@ export default function ProductsTable({
                 className="p-1 outline-none focus:outline-none focus:ring-0 focus-visible:ring-0"
               ></input>
             </TableHead>
-            <TableHead className="hidden md:table-cell">категория</TableHead>
-            <TableHead className="hidden md:table-cell">выход</TableHead>
-            <TableHead className="hidden md:table-cell">id</TableHead>
-            <TableHead />
+            <TableHead className="w-42 hidden md:table-cell" />
+            <TableHead className="md:w-20 w-16" />
+            <TableHead className="w-10 text-muted-foreground">id</TableHead>
+            <TableHead className="w-12" />
           </TableRow>
         </TableHeader>
 
@@ -67,17 +66,13 @@ export default function ProductsTable({
                   className="truncate cursor-pointer hover:text-red-700"
                   onClick={() => handleView(item.id)}
                 >
-                  {item.name} <span className="pl-4">...</span>
+                  {item.name} <span className="pl-2">...</span>
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   {item.category}
                 </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {item.weight}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {item.id}
-                </TableCell>
+                <TableCell>{item.weight}</TableCell>
+                <TableCell>{item.id}</TableCell>
                 <TableCell>
                   {isAdmin && (
                     <ActionButton

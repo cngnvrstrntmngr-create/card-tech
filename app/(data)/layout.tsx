@@ -1,5 +1,5 @@
-import NavMenuHeader from "@/components/nav-menu/NavMenuHeader";
-import NotPermission from "@/components/page/NotPermission";
+import NavMenuHeader from "@/components/nav-menu/nav-menu";
+import NotPermission from "@/components/page/not-permission";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
@@ -30,9 +30,8 @@ export default async function HomeLayout({
     );
   }
   return (
-    <div className="flex items-center flex-col h-full">
-      <NavMenuHeader navItems={navItems} defaultPatch="cards" />
+    <NavMenuHeader navItems={navItems} defaultPatch="cards">
       {children}
-    </div>
+    </NavMenuHeader>
   );
 }

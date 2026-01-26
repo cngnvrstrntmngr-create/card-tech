@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { PageNavType } from "./NavMenuHeader";
+import { PageNavType } from "./nav-menu";
 
 export default function SelectTabsByPatch({
   patch,
@@ -17,16 +17,16 @@ export default function SelectTabsByPatch({
 }) {
   return (
     <Tabs value={patch} onValueChange={(value) => setPatch(value)}>
-      <TabsList className="flex gap-2 h-8">
+      <TabsList className="flex gap-2 h-8 md:h-10">
         {navItems.map((page) => (
           <TabsTrigger
             key={page.title}
             value={page.href}
             disabled={isPending}
             className={cn(
-              "md:w-26 w-18 cursor-pointer",
+              "md:w-32 w-22 cursor-pointer",
               isPending && "opacity-50",
-              classNamePatch
+              classNamePatch,
             )}
           >
             <span className="truncate block w-full">{page.title}</span>

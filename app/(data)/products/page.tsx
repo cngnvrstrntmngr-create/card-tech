@@ -2,10 +2,10 @@ import {
   getAllProducts,
   getProductByCategory,
 } from "@/app/actions/products/products-actions";
-import EmptyPage from "@/components/page/EmptyPage";
-import NotData from "@/components/page/NotData";
+import EmptyPage from "@/components/page/empty-page";
+import NotData from "@/components/page/not-data";
 import { ProductType } from "@/features/product/schema";
-import ProductsTable from "@/features/products-table/ProductsTable";
+import ProductsTable from "@/features/products-table/products-page";
 
 export default async function Page({
   searchParams,

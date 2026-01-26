@@ -61,7 +61,7 @@ export default function SelectByMonthYear({
   isLoading?: boolean;
 }) {
   const classNameSelect =
-    "md:w-36 w-22 h-8! rounded-md  [&>svg]:hidden justify-center bg-black border-0 items-center";
+    "md:w-38 w-28 md:h-10! h-8! rounded-md  [&>svg]:hidden justify-center bg-black border-0 items-center";
 
   const resetParams = () => {
     setCategory("");
@@ -88,9 +88,9 @@ export default function SelectByMonthYear({
       </Select>
       <button
         onClick={resetParams}
-        className="cursor-pointer md:w-12 w-8  px-2 bg-black border-0 rounded-md h-8 flex items-center justify-center"
+        className="cursor-pointer md:w-14 w-12  px-2 bg-black border-0 rounded-md h-8 md:h-10 flex items-center justify-center"
       >
-        <RefreshCcw className="w-4 h-4 text-white" />
+        <RefreshCcw className="w-4 h-4  text-white" />
       </button>
     </div>
   );
