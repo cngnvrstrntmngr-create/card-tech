@@ -2,7 +2,6 @@
 
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import SecretLoginForm from "./SecretButton";
 
 export default function GoogleButton() {
   const searchParams = useSearchParams();
@@ -19,7 +18,6 @@ export default function GoogleButton() {
       >
         Sign in with Google
       </button>
-      <SecretLoginForm />
     </div>
   );
 }

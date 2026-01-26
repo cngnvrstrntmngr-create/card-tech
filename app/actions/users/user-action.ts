@@ -1,7 +1,9 @@
 "use server";
 
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbBar } from "@/lib/firebase-admin";
 import { redis } from "@/lib/redis";
+
+const db = dbBar;
 
 export type UserData = {
   id: string;
@@ -15,7 +17,7 @@ export async function getUsers(): Promise<UserData[]> {
   const cached = await redis.get<UserData[]>(USERS_KEY);
   if (cached) return cached;
 
-  const snapshot = await dbAdmin.collection("users").get();
+  const snapshot = await dbBar.collection("users").get();
   const users = snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),

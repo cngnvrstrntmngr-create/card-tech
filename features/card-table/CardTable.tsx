@@ -49,17 +49,16 @@ export default function ProductsTable({
             <TableHead className="hidden md:table-cell">выход</TableHead>
             <TableHead className="hidden md:table-cell">id</TableHead>
             <TableHead />
-            <TableHead />
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {data
             .filter((item) =>
-              item.name.toLowerCase().includes(normalizedSearch)
+              item.name.toLowerCase().includes(normalizedSearch),
             )
             .sort((a, b) =>
-              a.name.localeCompare(b.name, "ru", { sensitivity: "base" })
+              a.name.localeCompare(b.name, "ru", { sensitivity: "base" }),
             )
             .map((item: any, index: number) => (
               <TableRow key={item.id}>
@@ -77,10 +76,7 @@ export default function ProductsTable({
                   {item.weight}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {item.cardId}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {format(new Date(item.createdAt), "dd.MM.yyyy")}
+                  {item.id}
                 </TableCell>
                 <TableCell>
                   {isAdmin && (

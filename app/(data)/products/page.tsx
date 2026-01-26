@@ -1,10 +1,10 @@
 import {
   getAllProducts,
   getProductByCategory,
-  ProductsGetData,
 } from "@/app/actions/products/products-actions";
 import EmptyPage from "@/components/page/EmptyPage";
 import NotData from "@/components/page/NotData";
+import { ProductType } from "@/features/product/schema";
 import ProductsTable from "@/features/products-table/ProductsTable";
 
 export default async function Page({
@@ -19,5 +19,5 @@ export default async function Page({
       ? await getAllProducts()
       : await getProductByCategory(categoryProduct);
   if (dataProduct.length === 0) return <NotData />;
-  return <ProductsTable data={dataProduct as ProductsGetData[]} />;
+  return <ProductsTable data={dataProduct as ProductType[]} />;
 }

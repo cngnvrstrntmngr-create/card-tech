@@ -1,117 +1,59 @@
 "use server";
 
 import { CalculationCardType } from "@/features/card/schema";
-import prisma from "@/lib/prisma";
+import { dbCard } from "@/lib/firebase-admin";
+
 import { unstable_cache, updateTag } from "next/cache";
 
-export type CardsGetData = CalculationCardType;
+const db = dbCard;
 
-export async function createCard(data: {
-  cardId: string;
-  name: string;
-  unit: string;
-  category: string;
-  weight: string;
-  expirationPeriod: string;
-  description?: string;
-  portion: string;
-  recipe?: {
-    name: string;
-    quantity: string;
-    coefficient: string;
-    unit: string;
-    nameId: string;
-  }[];
-}) {
-  const exists = await prisma.calculationCard.findUnique({
-    where: { cardId: data.cardId },
-    select: { id: true },
-  });
+export async function createCard(data: CalculationCardType) {
+  if (!data.id) throw new Error("KEY_REQUIRED");
+  const docRef = db.collection("cards").doc(data.id);
 
-  if (exists) {
-    throw new Error("CARD_ID_EXISTS");
-  }
-
-  const card = await prisma.calculationCard.create({
-    data: {
-      cardId: data.cardId,
-      name: data.name,
-      unit: data.unit,
-      category: data.category,
-      weight: data.weight,
-      expirationPeriod: data.expirationPeriod,
-      portion: data.portion,
-      description: data.description || "",
-      recipe: data.recipe
-        ? {
-            create: data.recipe.map((r) => ({
-              name: r.name,
-              quantity: r.quantity,
-              coefficient: r.coefficient,
-              unit: r.unit,
-              nameId: r.nameId,
-              productId: Number(r.nameId),
-            })),
-          }
-        : undefined,
-    },
-    include: { recipe: true },
+  const snapshot = await docRef.get();
+  if (snapshot.exists) throw new Error("KEY_EXISTS");
+  await docRef.set({
+    name: data.name,
+    unit: data.unit,
+    category: data.category,
+    weight: data.weight,
+    expirationPeriod: data.expirationPeriod,
+    portion: data.portion,
+    description: data.description || "",
+    recipe:
+      data.recipe.map((r) => ({
+        coefficient: r.coefficient,
+        name: r.name,
+        nameId: r.nameId,
+        quantity: r.quantity,
+        unit: r.unit,
+      })) || [],
   });
 
   updateTag("cards");
 
-  return card.id;
+  return docRef.id;
 }
 
 export async function updateCard(
-  id: number,
-  data: {
-    name?: string;
-    unit?: string;
-    category?: string;
-    weight?: string;
-    expirationPeriod?: string;
-    description?: string;
-    recipe?: {
-      id?: number;
-      name: string;
-      quantity: string;
-      coefficient: string;
-      unit: string;
-      nameId: string;
-      productId?: number;
-    }[];
-  }
+  id: string,
+  data: Omit<CalculationCardType, "id">,
 ) {
-  const card = await prisma.calculationCard.update({
-    where: { id },
-    data: {
-      name: data.name,
-      unit: data.unit,
-      category: data.category,
-      weight: data.weight,
-      expirationPeriod: data.expirationPeriod,
-      description: data.description,
-      recipe: data.recipe
-        ? {
-            deleteMany: {},
-            create: data.recipe.map((r) => ({ ...r })),
-          }
-        : undefined,
-    },
-    include: { recipe: true },
-  });
+  if (!id) throw new Error("KEY_REQUIRED");
+  const docRef = db.collection("cards").doc(id);
+
+  await docRef.update(data);
 
   updateTag("cards");
 
-  return card.id;
+  return docRef.id;
 }
 
 // get all
 export async function _getAllCards() {
-  return await prisma.calculationCard.findMany({
-    include: { recipe: true },
-  });
+  const snapshot = await db.collection("cards").get();
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
 export const getAllCards = unstable_cache(_getAllCards, ["cards"], {
@@ -121,31 +63,21 @@ export const getAllCards = unstable_cache(_getAllCards, ["cards"], {
 
 // get by id
 
-export async function getCardById(id: number) {
-  return await prisma.calculationCard.findUnique({
-    where: { id },
-    include: { recipe: true },
-  });
-}
+export async function getCardById(id: string) {
+  if (!id) throw new Error("KEY_REQUIRED");
+  const snapshot = await db.collection("cards").doc(id).get();
+  if (!snapshot.exists) return null;
 
-// get by product
-export async function _getCardsByProduct(productId: number) {
-  return await prisma.calculationCard.findMany({
-    where: { recipe: { some: { productId } } },
-    include: { recipe: true },
-  });
+  return { id: snapshot.id, ...snapshot.data() };
 }
-export const getCardsByProduct = unstable_cache(_getCardsByProduct, ["cards"], {
-  revalidate: false,
-  tags: ["cards"],
-});
 
 // get by category
 export async function _getCardsByCategory(category: string) {
-  return await prisma.calculationCard.findMany({
-    where: { category },
-    include: { recipe: true },
-  });
+  const snapshot = await db
+    .collection("cards")
+    .where("category", "==", category)
+    .get();
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 export const getCardsByCategory = unstable_cache(
   _getCardsByCategory,
@@ -153,13 +85,14 @@ export const getCardsByCategory = unstable_cache(
   {
     revalidate: false,
     tags: ["cards"],
-  }
+  },
 );
 
-export async function deleteCard(id: number) {
-  const card = await prisma.calculationCard.delete({
-    where: { id },
-  });
+// delete
+
+export async function deleteCard(id: string) {
+  if (!id) throw new Error("KEY_REQUIRED");
+  await db.collection("cards").doc(id).delete();
   updateTag("cards");
-  return card.id;
+  return id;
 }

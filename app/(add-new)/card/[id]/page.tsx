@@ -12,7 +12,9 @@ export default async function Page({
   const { id } = await params;
   if (!id) return null;
   const dataProduct = await getAllProducts();
-  const dataCard = await getCardById(+id);
+  const dataCard = await getCardById(id);
+  console.log("dataCard", dataProduct);
+  console.log("dataCard", dataCard);
   return (
     <CardForm
       dataProduct={dataProduct as ProductType[]}

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { CATEGORY_PRODUCT, CATEGORY_UNIT } from "./constants";
 
 export const unitEnum = z.enum(
-  CATEGORY_UNIT.map((u) => u.value) as ["kg", "l", "pcs"]
+  CATEGORY_UNIT.map((u) => u.value) as ["kg", "l", "pcs"],
 );
 export const categoryEnum = z.enum(
   CATEGORY_PRODUCT.map((u) => u.value) as [
@@ -18,22 +18,21 @@ export const categoryEnum = z.enum(
     "sauces_canned",
     "frozen",
     "bakery",
-    "confectionery"
-  ]
+    "confectionery",
+  ],
 );
 
 export const productSchema = z.object({
-  id: z.number().optional(),
   name: z.string(),
   coefficient: z
     .string()
     .regex(
       /^\d+(\.\d+)?$/,
-      "Коэффициент должен содержать только цифры и точку"
+      "Коэффициент должен содержать только цифры и точку",
     ),
   unit: unitEnum,
   category: categoryEnum,
-  key: z.string().regex(/^\d+$/, "Ключ должен содержать только цифры"),
+  id: z.string().regex(/^\d+$/, "Ключ должен содержать только цифры"),
 });
 
 export type ProductType = z.infer<typeof productSchema>;
@@ -43,5 +42,5 @@ export const productDefaultValues = {
   coefficient: "",
   unit: undefined,
   category: undefined,
-  key: "",
+  id: "",
 };

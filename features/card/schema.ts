@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const recipeItemSchema = z.object({
-  id: z.number().optional(),
   name: z.string().default(""),
   quantity: z
     .string()
@@ -25,9 +24,8 @@ export const recipeItemDefaultValues = {
 };
 
 export const calculationCardSchema = z.object({
-  id: z.number().optional(),
   portion: z.string().optional().default("1"),
-  cardId: z
+  id: z
     .string()
     .regex(/^\d+$/, "CardId должен содержать только цифры")
     .optional()
@@ -50,7 +48,7 @@ export const calculationCardSchema = z.object({
 });
 
 export const calculationCardDefaultValues = {
-  cardId: "",
+  id: "",
   name: "",
   unit: "",
   category: "",
