@@ -1,5 +1,4 @@
 import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
 import { getUsers } from "@/app/actions/users/user-action";
 
