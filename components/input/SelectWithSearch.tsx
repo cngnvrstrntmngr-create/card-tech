@@ -45,10 +45,12 @@ function SelectFieldWithSearch({
   const { control } = useFormContext();
   const [search, setSearch] = useState("");
 
+  const [open, setOpen] = useState(false);
+
   const filteredOptions = useMemo(() => {
     if (!search) return options;
     return options.filter((item) =>
-      item.label.toLowerCase().includes(search.toLowerCase())
+      item.label.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, options]);
 
@@ -60,13 +62,13 @@ function SelectFieldWithSearch({
         return (
           <FormItem>
             <FormControl>
-              <Popover>
+              <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <button
                     type="button"
                     className={cn(
                       "w-full border rounded-md px-2 flex justify-between items-center h-8",
-                      className
+                      className,
                     )}
                     disabled={disabled}
                   >
@@ -95,6 +97,7 @@ function SelectFieldWithSearch({
                               field.onChange(item.value);
                               onValueChange?.(item.value);
                               setSearch("");
+                              setOpen(false);
                             }}
                           >
                             {item.label}

@@ -13,6 +13,7 @@ import { productDefaultValues, productSchema, ProductType } from "./schema";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ProductForm({
   data,
@@ -21,6 +22,7 @@ export default function ProductForm({
   data?: ProductType;
   disabled?: boolean;
 }) {
+  const router = useRouter();
   const id = data?.id;
   const form = useForm<ProductType>({
     resolver: zodResolver(productSchema),
@@ -34,16 +36,18 @@ export default function ProductForm({
         await createProduct(data);
         toast.success("Продукт успешно создан");
       } else {
-        await updateProduct(id, data);
+        const { id, ...formattedData } = data;
+        await updateProduct(id, formattedData);
         toast.success("Продукт успешно обновлен");
       }
 
       form.reset(productDefaultValues);
+      router.back();
     } catch (error) {
       if (error instanceof Error && error.message === "KEY_EXISTS") {
         toast.error("Продукт с таким key уже существует");
 
-        form.setError("key", {
+        form.setError("id", {
           type: "manual",
           message: "Такой key уже используется",
         });
@@ -84,7 +88,7 @@ export default function ProductForm({
         options={CATEGORY_PRODUCT}
         disabled={disabled}
       />
-      <TextInput fieldLabel="номер id" fieldName="key" disabled={disabled} />
+      <TextInput fieldLabel="номер id" fieldName="id" disabled={disabled} />
     </FormWrapper>
   );
 }

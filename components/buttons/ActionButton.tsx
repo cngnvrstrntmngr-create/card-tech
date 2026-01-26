@@ -11,9 +11,9 @@ export default function ActionButton({
   mainTag,
   handleDelete,
 }: {
-  id: number;
+  id: string;
   mainTag: string;
-  handleDelete?: (id: number) => void;
+  handleDelete?: (id: string) => void;
 }) {
   const router = useRouter();
   const { data: session } = useSession();

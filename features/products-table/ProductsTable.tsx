@@ -7,21 +7,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  deleteProduct,
-  ProductsGetData,
-} from "@/app/actions/products/products-actions";
+import { deleteProduct } from "@/app/actions/products/products-actions";
 import { CATEGORY_PRODUCT, CATEGORY_UNIT } from "../product/constants";
 import ActionButton from "@/components/buttons/ActionButton";
 import { useState, ViewTransition } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { ProductType } from "../product/schema";
 
 interface ProductsTableProps {
-  data: ProductsGetData[];
+  data: ProductType[];
 }
 
 export default function ProductsTable({ data }: ProductsTableProps) {
+  console.log(data);
   const router = useRouter();
 
   const { data: session } = useSession();
@@ -58,10 +57,10 @@ export default function ProductsTable({ data }: ProductsTableProps) {
         <TableBody>
           {data
             .filter((product) =>
-              product.name.toLowerCase().includes(normalizedSearch)
+              product.name.toLowerCase().includes(normalizedSearch),
             )
             .sort((a, b) =>
-              a.name.localeCompare(b.name, "ru", { sensitivity: "base" })
+              a.name.localeCompare(b.name, "ru", { sensitivity: "base" }),
             )
             .map((product, index) => (
               <TableRow key={product.id}>
@@ -83,12 +82,12 @@ export default function ProductsTable({ data }: ProductsTableProps) {
                   }
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {product.key || "-"}
+                  {product.id || "-"}
                 </TableCell>
                 <TableCell>
                   {isAdmin && (
                     <ActionButton
-                      id={+product?.id!}
+                      id={product?.id!}
                       mainTag="product"
                       handleDelete={deleteProduct}
                     />

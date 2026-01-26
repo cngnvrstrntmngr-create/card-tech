@@ -9,6 +9,8 @@ export default async function Page({
 }) {
   const { id } = await params;
   if (!id) return null;
-  const data = await getProductById(+id);
+  const data = await getProductById(id);
+
+  console.log(data);
   return <ProductForm data={data as ProductType} />;
 }

@@ -52,6 +52,7 @@ export default function CardForm({
   dataCard?: CalculationCardType;
   disabled?: boolean;
 }) {
+  console.log("dataCard", dataCard);
   const router = useRouter();
   const id = dataCard && dataCard?.id?.toString();
   const STORAGE_KEY = "add-card";
@@ -61,6 +62,8 @@ export default function CardForm({
   const [dataOptions, setDataOptions] = useState<
     { label: string; value: string }[]
   >([]);
+
+  console.log("dataOptions", dataOptions);
 
   const form = useForm<CalculationCardFormValues>({
     resolver: zodResolver(calculationCardSchema),
@@ -124,22 +127,26 @@ export default function CardForm({
   }, [recipe, portion, dataProduct]);
 
   const onSubmit: SubmitHandler<CalculationCardType> = async (data) => {
+    console.log("submit cards", data);
+
+    const { id, ...rest } = data;
     try {
-      if (id) {
-        await updateCard(+id, data);
-        toast.success("Продукт успешно обновлен");
-      } else {
+      if (!id) {
         await createCard(data);
         toast.success("Продукт успешно создан");
+      } else {
+        console.log("rest", rest);
+        await updateCard(id, rest);
+        toast.success("Продукт успешно обновлен");
       }
 
       resetForm(calculationCardDefaultValues);
-      router.push("/cards");
+      router.back();
     } catch (error) {
       if (error instanceof Error && error.message === "CARD_ID_EXISTS") {
         toast.error("Карта с таким номером уже существует");
 
-        form.setError("cardId", {
+        form.setError("id", {
           type: "manual",
           message: "Этот номер карты уже используется",
         });
@@ -158,7 +165,7 @@ export default function CardForm({
       dataProduct.map((item) => ({
         label: item.name,
         value: item.id?.toString() || "",
-      }))
+      })),
     );
   }, [dataProduct]);
 
@@ -191,10 +198,11 @@ export default function CardForm({
         <PrintButton componentRef={componentRef} className="" />
 
         <div className="mb-3">
-          <NumericInput
+          <TextInput
             fieldLabel="Технологическая карта:"
-            fieldName="cardId"
-            className="border-0 border-b text-start  font-bold  rounded-none shadow-none h-8 w-full"
+            fieldName="id"
+            orientation="horizontal"
+            classNameInput="h-8! border-0 shadow-none border-b rounded-none"
             disabled={disabled}
           />
         </div>
@@ -286,16 +294,16 @@ export default function CardForm({
                       fieldName={`recipe.${idx}.nameId`}
                       onValueChange={(value) => {
                         const product = dataProduct.find(
-                          (item) => item.id?.toString() === value
+                          (item) => item.id?.toString() === value,
                         );
 
                         form.setValue(
                           `recipe.${idx}.name`,
-                          product?.name ?? ""
+                          product?.name ?? "",
                         );
                         form.setValue(
                           `recipe.${idx}.unit`,
-                          product?.unit ?? ""
+                          product?.unit ?? "",
                         );
                       }}
                       className="border-0"
@@ -342,7 +350,7 @@ export default function CardForm({
                   <TableCell
                     className={cn(
                       "text-end print:hidden",
-                      disabled && "hidden"
+                      disabled && "hidden",
                     )}
                   >
                     <div className="flex justify-between gap-2">

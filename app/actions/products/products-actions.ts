@@ -1,59 +1,45 @@
 "use server";
 import { ProductType } from "@/features/product/schema";
-import prisma from "@/lib/prisma";
+import { dbCard } from "@/lib/firebase-admin";
 import { unstable_cache, updateTag } from "next/cache";
 
-export type ProductsGetData = ProductType;
-
+const db = dbCard;
 // create
-export async function createProduct(data: {
-  name: string;
-  coefficient: string;
-  unit: string;
-  category: string;
-  key?: string;
-}) {
-  if (data.key) {
-    const exists = await prisma.product.findUnique({
-      where: { key: data.key },
-      select: { id: true },
-    });
+export async function createProduct(data: ProductType) {
+  if (!data.id) throw new Error("KEY_REQUIRED");
 
-    if (exists) {
-      throw new Error("KEY_EXISTS");
-    }
-  }
+  const docRef = db.collection("products").doc(data.id);
 
-  const product = await prisma.product.create({ data });
+  const snapshot = await docRef.get();
+  if (snapshot.exists) throw new Error("KEY_EXISTS");
+
+  await docRef.set({
+    name: data.name,
+    coefficient: data.coefficient,
+    unit: data.unit,
+    category: data.category,
+  });
+
   updateTag("products");
-
-  return product.id;
+  return docRef.id;
 }
 
 // update
-export async function updateProduct(
-  id: number,
-  data: {
-    name?: string;
-    coefficient?: string;
-    unit?: string;
-    productId?: number;
-  }
-) {
-  const product = await prisma.product.update({
-    where: { id },
-    data,
-  });
-  updateTag("products");
 
-  return product.id;
+export async function updateProduct(id: string, data: Omit<ProductType, "id">) {
+  if (!id) throw new Error("KEY_REQUIRED");
+
+  const docRef = db.collection("products").doc(id);
+
+  await docRef.update(data);
+  updateTag("products");
+  return id;
 }
 
 // get all
 export async function _getAllProducts() {
-  return await prisma.product.findMany({
-    // recipeItems не включаем
-  });
+  const snapshot = await db.collection("products").get();
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
 export const getAllProducts = unstable_cache(_getAllProducts, ["products"], {
@@ -62,32 +48,39 @@ export const getAllProducts = unstable_cache(_getAllProducts, ["products"], {
 });
 
 // get by id
-export async function getProductById(id: number) {
-  return await prisma.product.findUnique({
-    where: { id },
-    include: { recipeItems: true },
-  });
+export async function getProductById(key: string) {
+  if (!key) throw new Error("KEY_REQUIRED");
+
+  const snapshot = await db.collection("products").doc(key).get();
+  if (!snapshot.exists) return null;
+
+  return { id: snapshot.id, ...snapshot.data() };
 }
-export async function _getProductByCategory(category: string) {
-  return await prisma.product.findMany({
-    where: { category },
-    // recipeItems не включаем
-  });
+
+// get by category
+export async function _getProductsByCategory(category: string) {
+  const snapshot = await db
+    .collection("products")
+    .where("category", "==", category)
+    .get();
+
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
 export const getProductByCategory = unstable_cache(
-  _getProductByCategory,
+  _getProductsByCategory,
   ["products"],
   {
     revalidate: false,
     tags: ["products"],
-  }
+  },
 );
 
-export async function deleteProduct(id: number) {
-  const product = await prisma.product.delete({
-    where: { id },
-  });
+// delete
+export async function deleteProduct(id: string) {
+  if (!id) throw new Error("KEY_REQUIRED");
+
+  await db.collection("products").doc(id).delete();
   updateTag("products");
-  return product.id;
+  return id;
 }
