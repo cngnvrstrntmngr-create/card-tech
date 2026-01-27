@@ -67,7 +67,7 @@ function SelectFieldWithSearch({
                   <button
                     type="button"
                     className={cn(
-                      "w-full border rounded-md px-2 flex justify-between items-center h-8",
+                      "w-full border rounded-md px-2 flex justify-between items-center h-7",
                       className,
                     )}
                     disabled={disabled}
@@ -81,7 +81,7 @@ function SelectFieldWithSearch({
                   <Command>
                     <CommandInput
                       placeholder="Search..."
-                      className="h-9"
+                      className="h-7"
                       value={search}
                       onValueChange={(val) => setSearch(val)}
                       disabled={disabled}

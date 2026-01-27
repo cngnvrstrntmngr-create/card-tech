@@ -64,31 +64,28 @@ export default function ProductForm({
     form.reset(data);
   }, [data]);
   return (
-    <FormWrapper
-      form={form}
-      onSubmit={onSubmit}
-      className="gap-8"
-      disabled={disabled}
-    >
-      <TextInput fieldLabel="продукт" fieldName="name" disabled={disabled} />
-      <TextInput
-        fieldLabel="коэффициент"
-        fieldName="coefficient"
-        disabled={disabled}
-      />
-      <SelectInput
-        fieldLabel="единица"
-        fieldName="unit"
-        options={CATEGORY_UNIT}
-        disabled={disabled}
-      />
-      <SelectInput
-        fieldLabel="категория"
-        fieldName="category"
-        options={CATEGORY_PRODUCT}
-        disabled={disabled}
-      />
-      <TextInput fieldLabel="номер id" fieldName="id" disabled={disabled} />
+    <FormWrapper form={form} onSubmit={onSubmit} disabled={disabled}>
+      <div className="flex flex-col gap-8">
+        <TextInput fieldLabel="продукт" fieldName="name" disabled={disabled} />
+        <TextInput
+          fieldLabel="коэффициент"
+          fieldName="coefficient"
+          disabled={disabled}
+        />
+        <SelectInput
+          fieldLabel="единица"
+          fieldName="unit"
+          options={CATEGORY_UNIT}
+          disabled={disabled}
+        />
+        <SelectInput
+          fieldLabel="категория"
+          fieldName="category"
+          options={CATEGORY_PRODUCT}
+          disabled={disabled}
+        />
+        <TextInput fieldLabel="номер id" fieldName="id" disabled={disabled} />
+      </div>
     </FormWrapper>
   );
 }

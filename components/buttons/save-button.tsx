@@ -13,7 +13,7 @@ export default function SaveExitButton({
   const router = useRouter();
   const exit = () => router.back();
   return (
-    <div className={cn("flex gap-4 w-full justify-end mt-6")}>
+    <div className={cn("flex gap-4 w-full justify-end sticky bottom-0 py-2")}>
       <Button
         type="button"
         variant="ghost"

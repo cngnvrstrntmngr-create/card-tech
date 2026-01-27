@@ -45,7 +45,7 @@ export default function SelectInput({
           className={cn(
             orientation === "horizontal"
               ? "grid-cols-2 gap-2 pb-2"
-              : "grid-cols-1 gap-4"
+              : "grid-cols-1 gap-4",
           )}
         >
           {fieldLabel && (

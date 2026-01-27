@@ -23,8 +23,10 @@ export function FormWrapper({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} {...props}>
-        <div className={cn(className, "flex flex-col w-full py-8 px-4 ")}>
-          {children}
+        <div
+          className={cn(className, "flex flex-col w-full py-8 px-4 h-screen")}
+        >
+          <div className="flex-1">{children}</div>
           <SaveExitButton resetForm={resetForm} disabled={disabled} />
         </div>
       </form>

@@ -1,3 +1,7 @@
 export default function EmptyPage() {
-  return <div className="pt-10">Выберите категорию</div>;
+  return (
+    <div className="flex items-center justify-center h-screen">
+      ... выберите категорию
+    </div>
+  );
 }

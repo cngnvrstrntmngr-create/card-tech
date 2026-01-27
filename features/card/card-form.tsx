@@ -52,9 +52,8 @@ export default function CardForm({
   dataCard?: CalculationCardType;
   disabled?: boolean;
 }) {
-  console.log("dataCard", dataCard);
   const router = useRouter();
-  const id = dataCard && dataCard?.id?.toString();
+  const idData = dataCard && dataCard?.id?.toString();
   const STORAGE_KEY = "add-card";
 
   const componentRef = useRef<HTMLDivElement>(null);
@@ -62,8 +61,6 @@ export default function CardForm({
   const [dataOptions, setDataOptions] = useState<
     { label: string; value: string }[]
   >([]);
-
-  console.log("dataOptions", dataOptions);
 
   const form = useForm<CalculationCardFormValues>({
     resolver: zodResolver(calculationCardSchema),
@@ -127,15 +124,12 @@ export default function CardForm({
   }, [recipe, portion, dataProduct]);
 
   const onSubmit: SubmitHandler<CalculationCardType> = async (data) => {
-    console.log("submit cards", data);
-
     const { id, ...rest } = data;
     try {
-      if (!id) {
+      if (!idData) {
         await createCard(data);
         toast.success("Продукт успешно создан");
       } else {
-        console.log("rest", rest);
         await updateCard(id, rest);
         toast.success("Продукт успешно обновлен");
       }
@@ -194,53 +188,53 @@ export default function CardForm({
       resetForm={reset}
       disabled={disabled}
     >
-      <div ref={componentRef}>
-        <PrintButton componentRef={componentRef} className="" />
+      <div ref={componentRef} className="flex flex-col justify-between h-full">
+        <div>
+          <PrintButton componentRef={componentRef} className="" />
 
-        <div className="mb-3">
           <TextInput
             fieldLabel="Технологическая карта:"
             fieldName="id"
             orientation="horizontal"
-            classNameInput="h-8! border-0 shadow-none border-b rounded-none"
+            classNameInput="h-7! border-0 shadow-none border-b rounded-none"
+            disabled={disabled}
+          />
+
+          <SelectInput
+            fieldLabel="Категория продукта:"
+            fieldName="category"
+            orientation="horizontal"
+            options={CATEGORY}
+            classNameSelect="border-0 shadow-none border-b rounded-none text-black! h-7!"
+            disabled={disabled}
+          />
+
+          <TextInput
+            fieldLabel="Наименование продукта:"
+            fieldName="name"
+            orientation="horizontal"
+            classNameInput="h-7! border-0 shadow-none border-b rounded-none"
+            disabled={disabled}
+          />
+
+          <TextInput
+            fieldLabel="Срок хранения:"
+            fieldName="expirationPeriod"
+            orientation="horizontal"
+            classNameInput="h-7! border-0 shadow-none border-b rounded-none"
+            disabled={disabled}
+          />
+
+          <TextInput
+            fieldLabel="Вес:"
+            fieldName="weight"
+            orientation="horizontal"
+            classNameInput="h-7! border-0 shadow-none border-b rounded-none"
             disabled={disabled}
           />
         </div>
 
-        <SelectInput
-          fieldLabel="Категория продукта:"
-          fieldName="category"
-          orientation="horizontal"
-          options={CATEGORY}
-          classNameSelect="border-0 shadow-none border-b rounded-none text-black! h-8!"
-          disabled={disabled}
-        />
-
-        <TextInput
-          fieldLabel="Наименование продукта:"
-          fieldName="name"
-          orientation="horizontal"
-          classNameInput="h-8! border-0 shadow-none border-b rounded-none"
-          disabled={disabled}
-        />
-
-        <TextInput
-          fieldLabel="Срок хранения:"
-          fieldName="expirationPeriod"
-          orientation="horizontal"
-          classNameInput="h-8! border-0 shadow-none border-b rounded-none"
-          disabled={disabled}
-        />
-
-        <TextInput
-          fieldLabel="Вес:"
-          fieldName="weight"
-          orientation="horizontal"
-          classNameInput="h-8! border-0 shadow-none border-b rounded-none"
-          disabled={disabled}
-        />
-
-        <Table className="my-2">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead colSpan={3}></TableHead>
@@ -286,7 +280,7 @@ export default function CardForm({
 
               return (
                 <TableRow key={field.id}>
-                  <TableCell className="border-r">{idx + 1}</TableCell>
+                  <TableCell className="border-r py-0">{idx + 1}</TableCell>
 
                   <TableCell className="py-0">
                     <SelectFieldWithSearch
@@ -306,7 +300,7 @@ export default function CardForm({
                           product?.unit ?? "",
                         );
                       }}
-                      className="border-0"
+                      className="border-0 h-7!"
                       disabled={disabled}
                     />
                   </TableCell>
@@ -314,7 +308,7 @@ export default function CardForm({
                   <TableCell className="border-x p-0">
                     <input
                       {...form.register(`recipe.${idx}.unit`)}
-                      className="text-center w-full"
+                      className="text-center w-full h-7"
                       disabled={disabled}
                     />
                   </TableCell>
@@ -322,7 +316,7 @@ export default function CardForm({
                   <TableCell className="border-x p-0 md:hidden">
                     <NumericInput
                       fieldName={`recipe.${idx}.quantity`}
-                      className="border-0 shadow-none rounded-none w-full h-8 text-center text-md"
+                      className="border-0 shadow-none rounded-none w-full h-7 text-center text-md"
                       disabled={disabled}
                       floating={true}
                     />
@@ -330,7 +324,7 @@ export default function CardForm({
                   <TableCell className="border-x p-0 hidden md:table-cell">
                     <input
                       {...form.register(`recipe.${idx}.quantity`)}
-                      className="border-0 shadow-none rounded-none w-full h-8 text-center text-md"
+                      className="border-0 shadow-none rounded-none w-full h-7 text-center text-md"
                       disabled={disabled}
                     />
                   </TableCell>
@@ -409,11 +403,10 @@ export default function CardForm({
           </TableBody>
         </Table>
 
-        <Label className="my-3">Технология приготовления:</Label>
-        <Textarea
-          className="my-4 resize-none"
-          {...form.register("description")}
-        />
+        <div>
+          <Label className="my-2">Технология приготовления:</Label>
+          <Textarea className="resize-none" {...form.register("description")} />
+        </div>
       </div>
     </FormWrapper>
   );

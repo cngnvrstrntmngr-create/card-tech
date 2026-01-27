@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { LogOut, Plus } from "lucide-react";
 import SelectTabsByPatch from "./select-patch";
@@ -29,7 +29,7 @@ export default function NavMenuHeader({
   const searchParams = useSearchParams();
 
   const initialPatch = pathname?.split("/")[1] || defaultPatch;
-  const initialCategory = searchParams.get("category") ?? "all";
+  const initialCategory = searchParams.get("category") ?? "";
   const initialCategoryProduct = searchParams.get("categoryProduct") ?? "all";
 
   const [patch, setPatch] = useState(initialPatch);
