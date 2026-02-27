@@ -37,7 +37,10 @@ export const calculationCardSchema = z.object({
 
   weight: z
     .string()
-    .regex(/^\d+(\/\d+)*$/, "Вес должен содержать только цифры и символ /")
+    .regex(
+      /^(kg|\d+(\/\d+)*)$/,
+      'Вес должен содержать только цифры, формат 1/2 или значение "kg"',
+    )
     .optional()
     .default(""),
 
