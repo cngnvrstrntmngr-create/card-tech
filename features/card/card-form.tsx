@@ -88,6 +88,12 @@ export default function CardForm({
       name: "recipe",
     }) || [];
 
+  const weight =
+    useWatch({
+      control: form.control,
+      name: "weight",
+    }) || 0;
+
   const RecipeArray = useFieldArray({
     control: form.control,
     name: "recipe",
@@ -239,7 +245,7 @@ export default function CardForm({
             <TableRow>
               <TableHead colSpan={3}></TableHead>
               <TableHead colSpan={2} className="text-center">
-                1 {category === "pf" ? "кг" : "порция"}
+                1 {category === "pf" || weight === "kg" ? "кг" : "порция"}
               </TableHead>
               <TableHead colSpan={2} className="text-center">
                 <div className="flex justify-center items-center gap-3">
@@ -248,7 +254,7 @@ export default function CardForm({
                     className="w-full h-full  border-0 shadow-none border-b rounded-none"
                     disabled={disabled}
                   />
-                  {category === "pf" ? "кг" : "порция"}
+                  {category === "pf" || weight === "kg" ? "кг" : "порция"}
                 </div>
               </TableHead>
               <TableHead></TableHead>

@@ -6,9 +6,28 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { RefreshCcw } from "lucide-react";
 
 export const CATEGORY = [
+  {
+    label: "первое-фуршет",
+    value: "first-furchet",
+  },
+  {
+    label: "второе-фуршет",
+    value: "second-furchet",
+  },
+  {
+    label: "гарнир-фуршет",
+    value: "side-furchet",
+  },
+  {
+    label: "салат-фуршет",
+    value: "salad-furchet",
+  },
+  {
+    label: "десерт-фуршет",
+    value: "dessert-furchet",
+  },
   {
     label: "первое",
     value: "first",
@@ -24,10 +43,6 @@ export const CATEGORY = [
   {
     label: "десерт",
     value: "dessert",
-  },
-  {
-    label: "суп",
-    value: "soup",
   },
   {
     label: "П/Ф",

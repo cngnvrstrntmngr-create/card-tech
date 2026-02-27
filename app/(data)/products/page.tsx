@@ -13,9 +13,8 @@ export default async function Page({
   searchParams: Promise<{ categoryProduct: string }>;
 }) {
   const { categoryProduct } = await searchParams;
-  if (!categoryProduct) return <EmptyPage />;
   const dataProduct =
-    categoryProduct === "all"
+    categoryProduct === "all" || !categoryProduct
       ? await getAllProducts()
       : await getProductByCategory(categoryProduct);
   if (dataProduct.length === 0) return <NotData />;

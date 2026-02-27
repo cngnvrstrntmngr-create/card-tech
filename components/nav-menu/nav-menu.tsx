@@ -29,8 +29,9 @@ export default function NavMenuHeader({
   const searchParams = useSearchParams();
 
   const initialPatch = pathname?.split("/")[1] || defaultPatch;
-  const initialCategory = searchParams.get("category") ?? "";
-  const initialCategoryProduct = searchParams.get("categoryProduct") ?? "all";
+  const initialCategory = searchParams.get("category") || "all";
+
+  const initialCategoryProduct = searchParams.get("categoryProduct") || "all";
 
   const [patch, setPatch] = useState(initialPatch);
   const [category, setCategory] = useState(initialCategory);
@@ -44,8 +45,12 @@ export default function NavMenuHeader({
 
     const url =
       newPatch === "cards"
-        ? `/${newPatch}?category=${category}`
-        : `/${newPatch}?categoryProduct=${categoryProduct}`;
+        ? category && category !== "all"
+          ? `/${newPatch}?category=${category}`
+          : `/${newPatch}`
+        : categoryProduct && categoryProduct !== "all"
+          ? `/${newPatch}?categoryProduct=${categoryProduct}`
+          : `/${newPatch}`;
 
     startTransition(() => router.push(url));
   };

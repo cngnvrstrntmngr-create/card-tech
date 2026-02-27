@@ -20,7 +20,6 @@ interface ProductsTableProps {
 }
 
 export default function ProductsTable({ data }: ProductsTableProps) {
-  console.log(data);
   const router = useRouter();
 
   const { data: session } = useSession();
