@@ -29,6 +29,10 @@ export const CATEGORY = [
     value: "dessert-furchet",
   },
   {
+    label: "закуска-фуршет",
+    value: "snack-furchet",
+  },
+  {
     label: "первое",
     value: "first",
   },
