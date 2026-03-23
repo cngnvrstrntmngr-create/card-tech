@@ -33,6 +33,10 @@ export const CATEGORY = [
     value: "snack-furchet",
   },
   {
+    label: "соусы-пф",
+    value: "sauces-pf",
+  },
+  {
     label: "первое",
     value: "first",
   },

@@ -12,6 +12,7 @@ export const CATEGORY_PRODUCT = [
   { label: "замороженные продукты", value: "frozen" },
   { label: "хлеб и выпечка", value: "bakery" },
   { label: "кондитерские изделия и десерты", value: "confectionery" },
+  { label: "полуфабрикаты", value: "semi-finished" },
 ];
 
 export const CATEGORY_UNIT = [
