@@ -39,7 +39,9 @@ export async function updateProduct(id: string, data: Omit<ProductType, "id">) {
 // get all
 export async function _getAllProducts() {
   const snapshot = await db.collection("products").get();
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs.map(
+    (doc) => ({ id: doc.id, ...doc.data() }) as ProductType,
+  );
 }
 
 export const getAllProducts = unstable_cache(_getAllProducts, ["products"], {

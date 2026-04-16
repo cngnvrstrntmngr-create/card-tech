@@ -3,11 +3,6 @@ import NotPermission from "@/components/page/not-permission";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
-const navItems = [
-  { title: "материалы", href: "products" },
-  { title: "тех-карты", href: "cards" },
-];
-
 const ACCESS_ROLE = ["ADMIN", "CUCINA", "MNGR", "BAR"];
 
 export default async function HomeLayout({
@@ -32,7 +27,7 @@ export default async function HomeLayout({
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-1">{children}</div>
-      <NavMenuHeader navItems={navItems} defaultPatch="cards" />
+      <NavMenuHeader />
     </div>
   );
 }

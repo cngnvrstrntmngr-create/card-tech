@@ -53,7 +53,9 @@ export async function updateCard(
 // get all
 export async function _getAllCards() {
   const snapshot = await db.collection("cards").get();
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs.map(
+    (doc) => ({ id: doc.id, ...doc.data() }) as CalculationCardType,
+  );
 }
 
 export const getAllCards = unstable_cache(_getAllCards, ["cards"], {

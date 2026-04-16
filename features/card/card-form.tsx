@@ -129,6 +129,8 @@ export default function CardForm({
     };
   }, [recipe, portion, dataProduct]);
 
+  const url = "/home#tab=cards";
+
   const onSubmit: SubmitHandler<CalculationCardType> = async (data) => {
     const { id, ...rest } = data;
     try {
@@ -141,7 +143,6 @@ export default function CardForm({
       }
 
       resetForm(calculationCardDefaultValues);
-      router.back();
     } catch (error) {
       if (error instanceof Error && error.message === "CARD_ID_EXISTS") {
         toast.error("Карта с таким номером уже существует");
@@ -156,6 +157,7 @@ export default function CardForm({
 
       toast.error("Ошибка сохранения продукта");
     }
+    router.push(url);
   };
 
   useEffect(() => {
@@ -193,6 +195,7 @@ export default function CardForm({
       onSubmit={onSubmit}
       resetForm={reset}
       disabled={disabled}
+      url={url}
     >
       <div ref={componentRef} className="flex flex-col justify-between h-full">
         <div>

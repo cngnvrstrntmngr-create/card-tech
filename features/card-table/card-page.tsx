@@ -14,6 +14,7 @@ import { CalculationCardType } from "../card/schema";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import PrintButton from "@/components/buttons/print-button";
+import { useHashParam } from "@/hooks/use-hash";
 
 export default function ProductsTable({
   data,
@@ -22,6 +23,8 @@ export default function ProductsTable({
 }) {
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === "ADMIN";
+
+  const [valueFilterCards] = useHashParam("filter-cards");
 
   const router = useRouter();
 
@@ -60,6 +63,11 @@ export default function ProductsTable({
 
           <TableBody>
             {data
+              .filter(
+                (item) =>
+                  valueFilterCards === "all" ||
+                  item.category === valueFilterCards,
+              )
               .filter((item) =>
                 item.name.toLowerCase().includes(normalizedSearch),
               )

@@ -1,118 +1,143 @@
 "use client";
-import { useState, useTransition } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { LogOut, Plus } from "lucide-react";
-import SelectTabsByPatch from "./select-patch";
-import SelectByCategory, { CATEGORY } from "./select-category";
+import { Activity, useEffect, useState, useTransition } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { Plus } from "lucide-react";
+import { CATEGORY } from "./select-category";
 import { CATEGORY_PRODUCT } from "@/features/product/constants";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useHashParam } from "@/hooks/use-hash";
+import { NAV_BY_PATCH, NAV_BY_PATCH_TYPE } from "./constants";
+import TabsOptions from "../tabs/tabs-options";
+
+import SelectOptions from "../select/select-options";
+import LogOutButton from "../buttons/logout-button";
 
 export type PageNavType = {
   title: string;
   href: string;
 };
 
-export default function NavMenuHeader({
-  navItems,
-  defaultPatch = "cards",
-  classNamePatch,
-}: {
-  navItems: PageNavType[];
-  defaultPatch?: string;
-  classNamePatch?: string;
-}) {
+export default function NavMenuHeader() {
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === "ADMIN";
 
-  const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const STORAGE_KEY_NAV = `nav-tab-${pathname}`;
+  const STORAGE_KEY_CARD_FILTER = `card-filter-${pathname}`;
+  const STORAGE_KEY_PRODUCT_FILTER = `product-filter-${pathname}`;
 
-  const initialPatch = pathname?.split("/")[1] || defaultPatch;
-  const initialCategory = searchParams.get("category") || "all";
+  const config = NAV_BY_PATCH[
+    pathname.split("/")[1] as keyof typeof NAV_BY_PATCH
+  ] as NAV_BY_PATCH_TYPE[string];
 
-  const initialCategoryProduct = searchParams.get("categoryProduct") || "all";
+  const tabs = config.tabs;
+  const isFilter = config.selectOptions;
 
-  const [patch, setPatch] = useState(initialPatch);
-  const [category, setCategory] = useState(initialCategory);
-  const [categoryProduct, setCategoryProduct] = useState(
-    initialCategoryProduct,
-  );
+  const [_value, setHash] = useHashParam("tab");
+  const [_valueFilterCards, setHashFilterCards] = useHashParam("filter-cards");
+  const [_valueFilterProducts, setHashFilterProducts] =
+    useHashParam("filter-products");
+
   const [isPending, startTransition] = useTransition();
+  const [tab, setTab] = useState(tabs[0].value);
+  const [filterCards, setFilterCards] = useState("all");
+  const [filterProducts, setFilterProducts] = useState("all");
 
-  const handlePatchChange = (newPatch: string) => {
-    setPatch(newPatch);
+  const router = useRouter();
+  // new
 
-    const url =
-      newPatch === "cards"
-        ? category && category !== "all"
-          ? `/${newPatch}?category=${category}`
-          : `/${newPatch}`
-        : categoryProduct && categoryProduct !== "all"
-          ? `/${newPatch}?categoryProduct=${categoryProduct}`
-          : `/${newPatch}`;
-
-    startTransition(() => router.push(url));
+  const handleTabChange = (value: string) => {
+    setTab(value);
+    localStorage.setItem(STORAGE_KEY_NAV, value);
+    setHash(value);
   };
 
-  const handleCategoryChange = (newCategory: string) => {
-    setCategory(newCategory);
-    const url = `/cards?category=${newCategory}`;
-    startTransition(() => router.push(url));
+  const handleFilterCardsChange = (value: string) => {
+    setFilterCards(value);
+    localStorage.setItem(STORAGE_KEY_CARD_FILTER, value);
+    setHashFilterCards(value);
   };
-
-  const handleCategoryProductChange = (newCategory: string) => {
-    setCategoryProduct(newCategory);
-    const url = `/products?categoryProduct=${newCategory}`;
-    startTransition(() => router.push(url));
+  const handleFilterProductsChange = (value: string) => {
+    setFilterProducts(value);
+    localStorage.setItem(STORAGE_KEY_PRODUCT_FILTER, value);
+    setHashFilterProducts(value);
   };
 
   const addNew = () => {
-    const url = patch === "cards" ? `/card` : `/product`;
+    const url = tab === "cards" ? `/card` : `/product`;
     router.push(url);
   };
 
+  useEffect(() => {
+    if (!pathname) return;
+
+    const storedTab = localStorage.getItem(STORAGE_KEY_NAV);
+    const storedFilter = localStorage.getItem(STORAGE_KEY_CARD_FILTER);
+    const storedFilterProduct = localStorage.getItem(
+      STORAGE_KEY_PRODUCT_FILTER,
+    );
+    if (storedTab) {
+      setTab(storedTab);
+      setHash(storedTab);
+    } else {
+      setHash(tabs[0].value);
+    }
+
+    if (storedFilter) {
+      setFilterCards(storedFilter);
+      setHashFilterCards(storedFilter);
+    } else {
+      setHashFilterCards("all");
+    }
+    if (storedFilterProduct) {
+      setFilterProducts(storedFilterProduct);
+      setHashFilterProducts(storedFilterProduct);
+    } else {
+      setHashFilterProducts("all");
+    }
+  }, [STORAGE_KEY_NAV, pathname, setHash]);
+
+  const selectClassName = "w-22 h-6.5! px-1 rounded-md text-xs bg-border";
+
   return (
-    <div className="px-2  pb-2   bg-background  sticky bottom-0 z-12 flex justify-between  md:gap-8">
-      <button
-        onClick={() => signOut({ callbackUrl: "/" })}
-        className="cursor-pointer w-10 px-2 bg-black border-0 rounded-md h-8 md:h-9 flex items-center justify-center"
-      >
-        <LogOut className="w-4 h-4 text-white" />
-      </button>
-      {navItems.length > 0 && (
-        <SelectTabsByPatch
-          patch={patch}
-          setPatch={handlePatchChange}
+    <div className="p-1 bg-background  sticky bottom-0 z-12 flex justify-between items-center">
+      <LogOutButton />
+      {tabs.length > 0 && (
+        <TabsOptions
+          value={tab}
+          setValue={handleTabChange}
           isPending={isPending}
-          navItems={navItems}
-          classNamePatch={classNamePatch}
+          options={tabs}
         />
       )}
 
-      {patch === "cards" && (
-        <SelectByCategory
-          options={[{ value: "all", label: "все" }, ...CATEGORY]}
-          category={category}
-          setCategory={handleCategoryChange}
-          isLoading={isPending}
-        />
-      )}
-
-      {patch === "products" && (
-        <SelectByCategory
-          options={[{ value: "all", label: "все" }, ...CATEGORY_PRODUCT]}
-          category={categoryProduct}
-          setCategory={handleCategoryProductChange}
-          isLoading={isPending}
-        />
+      {isFilter && (
+        <>
+          <Activity mode={tab === "cards" ? "visible" : "hidden"}>
+            <SelectOptions
+              options={[{ value: "all", label: "все" }, ...CATEGORY]}
+              value={filterCards}
+              onChange={handleFilterCardsChange}
+              className={selectClassName}
+            />
+          </Activity>
+          <Activity mode={tab === "products" ? "visible" : "hidden"}>
+            <SelectOptions
+              options={[{ value: "all", label: "все" }, ...CATEGORY_PRODUCT]}
+              value={filterProducts}
+              onChange={handleFilterProductsChange}
+              className={selectClassName}
+            />
+          </Activity>
+        </>
       )}
       {isAdmin && (
         <button
           onClick={addNew}
-          className="cursor-pointer w-10 px-2 bg-blue-500 border-0 rounded-md h-8 md:h-9 flex items-center justify-center"
+          type="button"
+          className="cursor-pointer w-10 px-2  border-0 h-8  flex items-center justify-center"
         >
-          <Plus className="w-4 h-4 text-white" />
+          <Plus className="w-4 h-4 text-blue-600 font-bold" />
         </button>
       )}
     </div>

@@ -29,7 +29,7 @@ export default function ProductForm({
     defaultValues: productDefaultValues,
     mode: "onChange",
   });
-
+  const url = "/home#tab=products";
   const onSubmit: SubmitHandler<any> = async (data) => {
     try {
       if (!id) {
@@ -42,7 +42,6 @@ export default function ProductForm({
       }
 
       form.reset(productDefaultValues);
-      router.back();
     } catch (error) {
       if (error instanceof Error && error.message === "KEY_EXISTS") {
         toast.error("Продукт с таким key уже существует");
@@ -57,14 +56,17 @@ export default function ProductForm({
 
       toast.error("Ошибка сохранения продукта");
     }
+
+    router.push(url);
   };
 
   useEffect(() => {
     if (!data) return;
     form.reset(data);
   }, [data]);
+
   return (
-    <FormWrapper form={form} onSubmit={onSubmit} disabled={disabled}>
+    <FormWrapper form={form} onSubmit={onSubmit} disabled={disabled} url={url}>
       <div className="flex flex-col gap-8">
         <TextInput fieldLabel="продукт" fieldName="name" disabled={disabled} />
         <TextInput

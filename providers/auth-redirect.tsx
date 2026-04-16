@@ -19,7 +19,7 @@ const SignInRedirect = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    if (status === "authenticated") router.replace("/cards");
+    if (status === "authenticated") router.replace("/home");
   }, [status, role, router]);
 
   if (status === "loading") {

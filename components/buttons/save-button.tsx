@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 export default function SaveExitButton({
   resetForm,
   disabled = false,
+  url,
 }: {
   resetForm?: () => void;
   disabled?: boolean;
+  url?: string;
 }) {
   const router = useRouter();
-  const exit = () => router.back();
+  const exit = () => router.push(url || "/");
   return (
     <div className={cn("flex gap-4 w-full justify-end sticky bottom-0 py-2")}>
       <Button
