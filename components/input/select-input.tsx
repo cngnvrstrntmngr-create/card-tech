@@ -50,7 +50,7 @@ export default function SelectInput({
         >
           {fieldLabel && (
             <FormLabel
-              className={cn(orientation === "horizontal" && "border-b")}
+              className={cn(orientation === "horizontal" && "border-b px-2")}
             >
               {fieldLabel}
             </FormLabel>

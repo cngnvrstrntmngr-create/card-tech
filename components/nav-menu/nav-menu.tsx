@@ -2,7 +2,6 @@
 import { Activity, useEffect, useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Plus } from "lucide-react";
-import { CATEGORY } from "./select-category";
 import { CATEGORY_PRODUCT } from "@/features/product/constants";
 import { useSession } from "next-auth/react";
 import { useHashParam } from "@/hooks/use-hash";
@@ -11,6 +10,7 @@ import TabsOptions from "../tabs/tabs-options";
 
 import SelectOptions from "../select/select-options";
 import LogOutButton from "../buttons/logout-button";
+import { CATEGORY } from "@/features/card/constants";
 
 export type PageNavType = {
   title: string;
@@ -22,16 +22,16 @@ export default function NavMenuHeader() {
   const isAdmin = session?.user?.role === "ADMIN";
 
   const pathname = usePathname();
+  const patch = pathname.split("/")[1] as keyof typeof NAV_BY_PATCH;
   const STORAGE_KEY_NAV = `nav-tab-${pathname}`;
   const STORAGE_KEY_CARD_FILTER = `card-filter-${pathname}`;
   const STORAGE_KEY_PRODUCT_FILTER = `product-filter-${pathname}`;
 
-  const config = NAV_BY_PATCH[
-    pathname.split("/")[1] as keyof typeof NAV_BY_PATCH
-  ] as NAV_BY_PATCH_TYPE[string];
+  const config = NAV_BY_PATCH[patch] as NAV_BY_PATCH_TYPE[string];
 
   const tabs = config.tabs;
   const isFilter = config.selectOptions;
+  const isActionButton = config.actionButton;
 
   const [_value, setHash] = useHashParam("tab");
   const [_valueFilterCards, setHashFilterCards] = useHashParam("filter-cards");
@@ -39,7 +39,7 @@ export default function NavMenuHeader() {
     useHashParam("filter-products");
 
   const [isPending, startTransition] = useTransition();
-  const [tab, setTab] = useState(tabs[0].value);
+  const [tab, setTab] = useState("");
   const [filterCards, setFilterCards] = useState("all");
   const [filterProducts, setFilterProducts] = useState("all");
 
@@ -71,33 +71,35 @@ export default function NavMenuHeader() {
   useEffect(() => {
     if (!pathname) return;
 
+    if (tabs.length === 0) return;
+
     const storedTab = localStorage.getItem(STORAGE_KEY_NAV);
     const storedFilter = localStorage.getItem(STORAGE_KEY_CARD_FILTER);
     const storedFilterProduct = localStorage.getItem(
       STORAGE_KEY_PRODUCT_FILTER,
     );
-    if (storedTab) {
+    if (storedTab && tabs.length > 0) {
       setTab(storedTab);
       setHash(storedTab);
     } else {
-      setHash(tabs[0].value);
+      setHash(tabs[0]?.value);
     }
 
-    if (storedFilter) {
+    if (storedFilter && isFilter) {
       setFilterCards(storedFilter);
       setHashFilterCards(storedFilter);
     } else {
       setHashFilterCards("all");
     }
-    if (storedFilterProduct) {
+    if (storedFilterProduct && isFilter) {
       setFilterProducts(storedFilterProduct);
       setHashFilterProducts(storedFilterProduct);
     } else {
       setHashFilterProducts("all");
     }
-  }, [STORAGE_KEY_NAV, pathname, setHash]);
+  }, [STORAGE_KEY_NAV, pathname, setHash, tabs, isFilter]);
 
-  const selectClassName = "w-22 h-6.5! px-1 rounded-md text-xs bg-border";
+  const selectClassName = "w-24 h-6.5! rounded-md text-xs bg-border";
 
   return (
     <div className="p-1 bg-background  sticky bottom-0 z-12 flex justify-between items-center">
@@ -109,6 +111,25 @@ export default function NavMenuHeader() {
           isPending={isPending}
           options={tabs}
         />
+      )}
+      {isActionButton && (
+        <>
+          <button
+            type="button"
+            onClick={() => router.push("/home")}
+            className="w-24 h-6.5! rounded-md text-sm bg-red-600 text-white"
+          >
+            exit
+          </button>
+          <button
+            form={patch}
+            type="submit"
+            className="w-24 h-6.5! rounded-md text-sm bg-blue-600 text-white"
+            disabled={isPending || !isAdmin}
+          >
+            save
+          </button>
+        </>
       )}
 
       {isFilter && (

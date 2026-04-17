@@ -3,6 +3,7 @@ export type NAV_BY_PATCH_TYPE = Record<
   {
     tabs: { label: string; value: string }[];
     selectOptions: boolean;
+    actionButton?: boolean;
   }
 >;
 
@@ -12,5 +13,7 @@ export const HOME_NAV_ITEMS = [
 ];
 
 export const NAV_BY_PATCH = {
-  home: { tabs: HOME_NAV_ITEMS, selectOptions: true },
+  home: { tabs: HOME_NAV_ITEMS, selectOptions: true, actionButton: false },
+  product: { tabs: [], selectOptions: false, actionButton: true },
+  card: { tabs: [], selectOptions: false, actionButton: true },
 } satisfies NAV_BY_PATCH_TYPE;

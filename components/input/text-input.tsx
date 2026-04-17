@@ -38,10 +38,12 @@ export default function TextInput({
       render={({ field }) => (
         <FormItem
           className={cn(
-            orientation === "vertical" ? "grid-cols-1 gap-4" : "grid-cols-2"
+            orientation === "vertical" ? "grid-cols-1 gap-4" : "grid-cols-2",
           )}
         >
-          <FormLabel className={cn(orientation === "horizontal" && "border-b")}>
+          <FormLabel
+            className={cn(orientation === "horizontal" && "border-b px-2")}
+          >
             {fieldLabel}
           </FormLabel>
           <FormControl className={cn(classNameInput, "w-full")}>

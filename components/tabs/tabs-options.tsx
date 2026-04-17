@@ -22,7 +22,7 @@ export default function TabsOptions({
             value={item.value}
             disabled={isPending}
             className={cn(
-              "hover:text-bl w-22 cursor-pointer md:w-24",
+              "hover:text-bl w-21 cursor-pointer md:w-24",
               isPending && "opacity-50",
             )}
           >

@@ -8,7 +8,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trash2Icon, PlusIcon } from "lucide-react";
+import { Trash2Icon, PlusIcon, SaveIcon, SaveOff } from "lucide-react";
 
 import TextInput from "@/components/input/text-input";
 import NumericInput from "@/components/input/numeric-input";
@@ -35,25 +35,40 @@ import {
 } from "./schema";
 import { ProductType } from "../product/schema";
 import { useLocalStorageForm } from "@/hooks/use-local-storage";
-import { CATEGORY } from "@/components/nav-menu/select-category";
-import { createCard, updateCard } from "@/app/actions/cards/cards-action";
+import {
+  createCard,
+  deleteCard,
+  updateCard,
+} from "@/app/actions/cards/cards-action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import SelectFieldWithSearch from "@/components/input/select-with-search";
 import PrintButton from "@/components/buttons/print-button";
 import { cn } from "@/lib/utils";
+import { CATEGORY } from "./constants";
+import { useSession } from "next-auth/react";
+import ActionButton from "@/components/buttons/action-button";
+import { Button } from "@/components/ui/button";
 
 export default function CardForm({
   dataProduct,
   dataCard,
-  disabled = false,
+  isCreate = false,
 }: {
   dataProduct: ProductType[];
   dataCard?: CalculationCardType;
-  disabled?: boolean;
+  isCreate?: boolean;
 }) {
   const router = useRouter();
-  const idData = dataCard && dataCard?.id?.toString();
+  const session = useSession();
+  const isAdmin = session.data?.user?.role === "ADMIN";
+
+  const idCard = dataCard && dataCard?.id?.toString();
+
+  const [isEdit, setIsEdit] = useState(isCreate);
+
+  const disabled = !isEdit || !isAdmin;
+
   const STORAGE_KEY = "add-card";
 
   const componentRef = useRef<HTMLDivElement>(null);
@@ -134,7 +149,7 @@ export default function CardForm({
   const onSubmit: SubmitHandler<CalculationCardType> = async (data) => {
     const { id, ...rest } = data;
     try {
-      if (!idData) {
+      if (!idCard) {
         await createCard(data);
         toast.success("Продукт успешно создан");
       } else {
@@ -190,22 +205,45 @@ export default function CardForm({
   };
 
   return (
-    <FormWrapper
-      form={form}
-      onSubmit={onSubmit}
-      resetForm={reset}
-      disabled={disabled}
-      url={url}
-    >
+    <FormWrapper form={form} onSubmit={onSubmit}>
       <div ref={componentRef} className="flex flex-col justify-between h-full">
         <div>
-          <PrintButton componentRef={componentRef} className="" />
+          <div className="flex w-full justify-between items-center py-2 px-2 sticky top-0 bg-background z-20 mb-2">
+            {idCard && isAdmin && (
+              <div className="flex items-center gap-8">
+                <ActionButton id={idCard} handleDelete={deleteCard} />
+                <button
+                  type="button"
+                  onClick={() => isAdmin && setIsEdit((prev) => !prev)}
+                  className="flex  cursor-pointer"
+                >
+                  {isEdit ? (
+                    <div className="text-rd flex gap-4 justify-center items-center">
+                      <SaveIcon className="h-4 w-4 text-blue-600" />
+                      <span className="text-xs text-muted-foreground">
+                        save mod
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="text-rd flex gap-4 justify-center items-center">
+                      <SaveOff className="h-4 w-4 text-red-600" />
+                      <span className="text-xs text-muted-foreground">
+                        view mod
+                      </span>
+                    </div>
+                  )}
+                </button>
+              </div>
+            )}
+
+            <PrintButton componentRef={componentRef} />
+          </div>
 
           <TextInput
             fieldLabel="Технологическая карта:"
             fieldName="id"
             orientation="horizontal"
-            classNameInput="h-7! border-0 shadow-none border-b rounded-none"
+            classNameInput="h-5! border-0 shadow-none border-b rounded-none text-sm font-bold"
             disabled={disabled}
           />
 
@@ -214,15 +252,15 @@ export default function CardForm({
             fieldName="category"
             orientation="horizontal"
             options={CATEGORY}
-            classNameSelect="border-0 shadow-none border-b rounded-none text-black! h-7!"
+            classNameSelect="border-0 shadow-none border-b rounded-none text-black! h-5!"
             disabled={disabled}
           />
 
           <TextInput
-            fieldLabel="Наименование продукта:"
+            fieldLabel="Наименование"
             fieldName="name"
             orientation="horizontal"
-            classNameInput="h-7! border-0 shadow-none border-b rounded-none"
+            classNameInput="h-5! border-0 shadow-none border-b rounded-none text-sm text-blue-600 font-bold"
             disabled={disabled}
           />
 
@@ -230,7 +268,7 @@ export default function CardForm({
             fieldLabel="Срок хранения:"
             fieldName="expirationPeriod"
             orientation="horizontal"
-            classNameInput="h-7! border-0 shadow-none border-b rounded-none"
+            classNameInput="h-5! border-0 shadow-none border-b rounded-none text-sm"
             disabled={disabled}
           />
 
@@ -238,15 +276,17 @@ export default function CardForm({
             fieldLabel="Вес:"
             fieldName="weight"
             orientation="horizontal"
-            classNameInput="h-7! border-0 shadow-none border-b rounded-none"
+            classNameInput="h-5! border-0 shadow-none border-b rounded-none text-sm"
             disabled={disabled}
           />
         </div>
 
-        <Table>
+        <Table className="md:table-fixed">
           <TableHeader>
             <TableRow>
-              <TableHead colSpan={3}></TableHead>
+              <TableHead className="w-6 md:w-8" />
+              <TableHead className="w-32 md:w-60" />
+              <TableHead className="w-8 md:w-12" />
               <TableHead colSpan={2} className="text-center">
                 1 {category === "pf" || weight === "kg" ? "кг" : "порция"}
               </TableHead>
@@ -260,7 +300,7 @@ export default function CardForm({
                   {category === "pf" || weight === "kg" ? "кг" : "порция"}
                 </div>
               </TableHead>
-              <TableHead></TableHead>
+              <TableHead className="w-14" />
             </TableRow>
 
             <TableRow>
@@ -288,10 +328,12 @@ export default function CardForm({
               const isOnlyOne = RecipeArray.fields.length === 1;
 
               return (
-                <TableRow key={field.id}>
-                  <TableCell className="border-r py-0">{idx + 1}</TableCell>
+                <TableRow key={field.id} className="[&>td]:py-0">
+                  <TableCell className="border-r text-start px-1 text-xs">
+                    {idx + 1}
+                  </TableCell>
 
-                  <TableCell className="py-0">
+                  <TableCell className="truncate">
                     <SelectFieldWithSearch
                       options={dataOptions}
                       fieldName={`recipe.${idx}.nameId`}
@@ -309,44 +351,44 @@ export default function CardForm({
                           product?.unit ?? "",
                         );
                       }}
-                      className="border-0 h-7!"
+                      className="border-0 h-7! text-blue-600 font-bold"
                       disabled={disabled}
                     />
                   </TableCell>
 
-                  <TableCell className="border-x p-0">
+                  <TableCell className="border-x">
                     <input
                       {...form.register(`recipe.${idx}.unit`)}
-                      className="text-center w-full h-7"
+                      className="text-center w-full h-7 text-xs"
                       disabled={disabled}
                     />
                   </TableCell>
 
-                  <TableCell className="border-x p-0 md:hidden">
+                  <TableCell className="border-x md:hidden">
                     <NumericInput
                       fieldName={`recipe.${idx}.quantity`}
-                      className="border-0 shadow-none rounded-none w-full h-7 text-center text-md"
+                      className="border-0 shadow-none rounded-none w-full h-7 text-center "
                       disabled={disabled}
                       floating={true}
                     />
                   </TableCell>
-                  <TableCell className="border-x p-0 hidden md:table-cell">
+                  <TableCell className="border-x  hidden md:table-cell">
                     <input
                       {...form.register(`recipe.${idx}.quantity`)}
-                      className="border-0 shadow-none rounded-none w-full h-7 text-center text-md"
+                      className="border-0 shadow-none rounded-none w-full h-7 text-center font-bold"
                       disabled={disabled}
                     />
                   </TableCell>
 
-                  <TableCell className="border-x text-center">
+                  <TableCell className="border-x text-center ">
                     {product && neto?.toFixed(4)}
                   </TableCell>
 
-                  <TableCell className="border-x text-center">
+                  <TableCell className="border-x text-center font-bold text-blue-600">
                     {product && bruto2?.toFixed(4)}
                   </TableCell>
 
-                  <TableCell className="border-x text-center">
+                  <TableCell className="border-x text-center text-blue-600">
                     {product && neto2?.toFixed(4)}
                   </TableCell>
 
@@ -414,8 +456,23 @@ export default function CardForm({
 
         <div>
           <Label className="my-2">Технология приготовления:</Label>
-          <Textarea className="resize-none" {...form.register("description")} />
+          <Textarea
+            className="resize-none text-xs"
+            {...form.register("description")}
+          />
         </div>
+        <Button
+          type="button"
+          variant="ghost"
+          className={cn(
+            "w-24 cursor-pointer text-red-600",
+            disabled && "hidden",
+          )}
+          onClick={() => reset()}
+          disabled={disabled || !isEdit}
+        >
+          очистить
+        </Button>
       </div>
     </FormWrapper>
   );

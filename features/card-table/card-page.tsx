@@ -35,7 +35,7 @@ export default function ProductsTable({
   const normalizedSearch = itemSearch.trim().toLowerCase();
 
   const handleView = (id: string) => {
-    router.push(`/card-view/${id}`);
+    router.push(`/card/${id}`);
   };
   return (
     <ViewTransition>
@@ -90,11 +90,7 @@ export default function ProductsTable({
                   <TableCell>{item.id}</TableCell>
                   <TableCell className="print:hidden">
                     {isAdmin && (
-                      <ActionButton
-                        id={item.id}
-                        mainTag="card"
-                        handleDelete={deleteCard}
-                      />
+                      <ActionButton id={item.id} handleDelete={deleteCard} />
                     )}
                   </TableCell>
                 </TableRow>

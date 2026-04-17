@@ -5,5 +5,7 @@ import { ProductType } from "@/features/product/schema";
 export default async function Page() {
   const dataProduct = await getAllProducts();
 
-  return <CardForm dataProduct={dataProduct as ProductType[]} />;
+  return (
+    <CardForm dataProduct={dataProduct as ProductType[]} isCreate={true} />
+  );
 }

@@ -1,36 +1,25 @@
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
 import { Form } from "../ui/form";
-import { cn } from "@/lib/utils";
-import SaveExitButton from "../buttons/save-button";
 
 export function FormWrapper({
   form,
   children,
   onSubmit,
-  className,
-  resetForm,
-  disabled = false,
-  url,
   ...props
 }: {
   form: UseFormReturn<any>;
   children: React.ReactNode;
   onSubmit?: SubmitHandler<any>;
-  className?: string;
-  resetForm?: () => void;
-  url?: string;
   [key: string]: any;
-  disabled?: boolean;
 }) {
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} {...props}>
-        <div
-          className={cn(className, "flex flex-col w-full py-8 px-4 h-screen")}
-        >
-          <div className="flex-1">{children}</div>
-          <SaveExitButton resetForm={resetForm} disabled={disabled} url={url} />
-        </div>
+      <form
+        onSubmit={form.handleSubmit(onSubmit || (() => {}))}
+        {...props}
+        className="p-2"
+      >
+        {children}
       </form>
     </Form>
   );
