@@ -11,6 +11,7 @@ import TabsOptions from "../tabs/tabs-options";
 import SelectOptions from "../select/select-options";
 import LogOutButton from "../buttons/logout-button";
 import { CATEGORY } from "@/features/card/constants";
+import path from "node:path";
 
 export type PageNavType = {
   title: string;
@@ -47,20 +48,26 @@ export default function NavMenuHeader() {
   // new
 
   const handleTabChange = (value: string) => {
-    setTab(value);
-    localStorage.setItem(STORAGE_KEY_NAV, value);
-    setHash(value);
+    startTransition(() => {
+      setTab(value);
+      localStorage.setItem(STORAGE_KEY_NAV, value);
+      setHash(value);
+    });
   };
 
   const handleFilterCardsChange = (value: string) => {
-    setFilterCards(value);
-    localStorage.setItem(STORAGE_KEY_CARD_FILTER, value);
-    setHashFilterCards(value);
+    startTransition(() => {
+      setFilterCards(value);
+      localStorage.setItem(STORAGE_KEY_CARD_FILTER, value);
+      setHashFilterCards(value);
+    });
   };
   const handleFilterProductsChange = (value: string) => {
-    setFilterProducts(value);
-    localStorage.setItem(STORAGE_KEY_PRODUCT_FILTER, value);
-    setHashFilterProducts(value);
+    startTransition(() => {
+      setFilterProducts(value);
+      localStorage.setItem(STORAGE_KEY_PRODUCT_FILTER, value);
+      setHashFilterProducts(value);
+    });
   };
 
   const addNew = () => {
@@ -99,7 +106,8 @@ export default function NavMenuHeader() {
     }
   }, [STORAGE_KEY_NAV, pathname, setHash, tabs, isFilter]);
 
-  const selectClassName = "w-24 h-6.5! rounded-md text-xs bg-border";
+  const selectClassName =
+    "w-24 md:w-44 h-6.5! md:h-8! rounded-md text-xs bg-border text-blue-600 font-bold";
 
   return (
     <div className="p-1 bg-background  sticky bottom-0 z-12 flex justify-between items-center">
@@ -122,9 +130,9 @@ export default function NavMenuHeader() {
             exit
           </button>
           <button
-            form={patch}
+            form={pathname}
             type="submit"
-            className="w-24 h-6.5! rounded-md text-sm bg-blue-600 text-white"
+            className="w-24 h-6.5! md:h-8! rounded-md text-sm bg-blue-600 text-white"
             disabled={isPending || !isAdmin}
           >
             save

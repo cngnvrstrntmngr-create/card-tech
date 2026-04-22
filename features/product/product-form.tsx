@@ -14,7 +14,7 @@ import { productDefaultValues, productSchema, ProductType } from "./schema";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SaveIcon, SaveOff } from "lucide-react";
 
@@ -33,6 +33,7 @@ export default function ProductForm({
 }) {
   const router = useRouter();
   const session = useSession();
+  const pathname = usePathname();
   const isAdmin = session.data?.user?.role === "ADMIN";
   const id = data?.id;
 
@@ -80,7 +81,7 @@ export default function ProductForm({
   }, [data]);
 
   return (
-    <FormWrapper form={form} onSubmit={onSubmit}>
+    <FormWrapper form={form} onSubmit={onSubmit} id={pathname}>
       <div className="flex flex-col gap-8">
         {isAdmin && (
           <div className="flex w-full justify-between items-center">

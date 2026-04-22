@@ -15,6 +15,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import PrintButton from "@/components/buttons/print-button";
 import { useHashParam } from "@/hooks/use-hash";
+import { ca } from "zod/v4/locales";
+import { CATEGORY } from "../card/constants";
 
 export default function ProductsTable({
   data,
@@ -29,6 +31,7 @@ export default function ProductsTable({
   const router = useRouter();
 
   const [itemSearch, setItemSearch] = useState<string>("");
+  const [idSearch, setIdSearch] = useState<string>("");
 
   const componentRef = useRef<HTMLDivElement>(null);
 
@@ -39,28 +42,23 @@ export default function ProductsTable({
   };
   return (
     <ViewTransition>
-      <div ref={componentRef} className="w-full">
-        <Table className="table-fixed">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-6">
-                <PrintButton componentRef={componentRef} className="" />
-              </TableHead>
-              <TableHead className="md:w-52 w-30">
-                <input
-                  type="text"
-                  placeholder="...search"
-                  onChange={(e) => setItemSearch(e.target.value)}
-                  className="p-1 outline-none focus:outline-none focus:ring-0 focus-visible:ring-0 print:hidden"
-                ></input>
-              </TableHead>
-              <TableHead className="w-42 hidden md:table-cell" />
-              <TableHead className="md:w-20 w-16" />
-              <TableHead className="w-10 text-muted-foreground">id</TableHead>
-              <TableHead className="w-12" />
-            </TableRow>
-          </TableHeader>
+      <div ref={componentRef} className="overflow-auto h-[95vh]">
+        <div className="sticky top-0 grid-cols-2  grid bg-background z-10 h-10">
+          <input
+            type="text"
+            placeholder="...search"
+            onChange={(e) => setItemSearch(e.target.value)}
+            className="p-2 pl-6 outline-none focus:outline-none focus:ring-0 focus-visible:ring-0 text-xs"
+          />
 
+          <input
+            type="text"
+            placeholder="...id"
+            onChange={(e) => setIdSearch(e.target.value)}
+            className="p-2 outline-none focus:outline-none focus:ring-0 focus-visible:ring-0 text-xs"
+          />
+        </div>
+        <Table className="table-fixed">
           <TableBody>
             {data
               .filter(
@@ -71,27 +69,28 @@ export default function ProductsTable({
               .filter((item) =>
                 item.name.toLowerCase().includes(normalizedSearch),
               )
+              .filter((item) => item.id.includes(idSearch))
               .sort((a, b) =>
                 a.name.localeCompare(b.name, "ru", { sensitivity: "base" }),
               )
-              .map((item: any, index: number) => (
-                <TableRow key={item.id}>
-                  <TableCell>{index + 1}</TableCell>
+              .map((card, index) => (
+                <TableRow key={card.id} className="[&>td]:py-1.5">
+                  <TableCell className="w-6 text-xs px-2">
+                    {index + 1}
+                  </TableCell>
                   <TableCell
-                    className="truncate cursor-pointer hover:text-red-700"
-                    onClick={() => handleView(item.id)}
+                    className="truncate cursor-pointer text-blue-600 w-44 md:w-80 text-xs px-4"
+                    onClick={() => handleView(card.id)}
                   >
-                    {item.name} <span className="pl-2">...</span>
+                    {card.name}
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {item.category}
+                  <TableCell className="text-xs">{card.weight}</TableCell>
+                  <TableCell className="text-xs w-30 text-blue-600 font-bold">
+                    {card.id}
                   </TableCell>
-                  <TableCell>{item.weight}</TableCell>
-                  <TableCell>{item.id}</TableCell>
-                  <TableCell className="print:hidden">
-                    {isAdmin && (
-                      <ActionButton id={item.id} handleDelete={deleteCard} />
-                    )}
+
+                  <TableCell className="hidden md:table-cell text-xs text-muted-foreground">
+                    {CATEGORY.find((c) => c.value === card.category)?.label}
                   </TableCell>
                 </TableRow>
               ))}

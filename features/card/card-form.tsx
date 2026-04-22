@@ -40,7 +40,7 @@ import {
   deleteCard,
   updateCard,
 } from "@/app/actions/cards/cards-action";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import SelectFieldWithSearch from "@/components/input/select-with-search";
 import PrintButton from "@/components/buttons/print-button";
@@ -61,6 +61,7 @@ export default function CardForm({
 }) {
   const router = useRouter();
   const session = useSession();
+  const pathname = usePathname();
   const isAdmin = session.data?.user?.role === "ADMIN";
 
   const idCard = dataCard && dataCard?.id?.toString();
@@ -205,7 +206,7 @@ export default function CardForm({
   };
 
   return (
-    <FormWrapper form={form} onSubmit={onSubmit}>
+    <FormWrapper form={form} onSubmit={onSubmit} id={pathname}>
       <div ref={componentRef} className="flex flex-col justify-between h-full">
         <div>
           <div className="flex w-full justify-between items-center py-2 px-2 sticky top-0 bg-background z-20 mb-2">

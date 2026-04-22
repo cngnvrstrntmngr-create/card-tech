@@ -1,17 +1,7 @@
 "use client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { deleteProduct } from "@/app/actions/products/products-actions";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { CATEGORY_PRODUCT, CATEGORY_UNIT } from "../product/constants";
-import ActionButton from "@/components/buttons/action-button";
-import { useState, ViewTransition } from "react";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ProductType } from "../product/schema";
 import { useHashParam } from "@/hooks/use-hash";
@@ -24,9 +14,6 @@ export default function ProductsTable({ data }: ProductsTableProps) {
   const router = useRouter();
 
   const [valueFilterProducts] = useHashParam("filter-products");
-
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.role === "ADMIN";
 
   const [itemSearch, setItemSearch] = useState<string>("");
   const [idSearch, setIdSearch] = useState<string>("");
@@ -83,9 +70,7 @@ export default function ProductsTable({ data }: ProductsTableProps) {
                 <TableCell className="text-xs w-30 text-blue-600 font-bold">
                   {product.id || "-"}
                 </TableCell>
-                <TableCell className="text-xs font-bold">
-                  {product.coefficient}
-                </TableCell>
+                <TableCell className="text-xs">{product.coefficient}</TableCell>
                 <TableCell className="hidden md:table-cell text-xs text-muted-foreground">
                   {
                     CATEGORY_PRODUCT.find((c) => c.value === product.category)
